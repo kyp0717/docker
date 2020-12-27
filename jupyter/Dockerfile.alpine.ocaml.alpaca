@@ -11,13 +11,13 @@ RUN sudo apk add --upgrade --no-cache zlib gmp zeromq python3 && \
 RUN pip3 install --user --no-cache-dir 'setuptools>=18.5' 'six>=1.9.0' jupyterlab && \
         mkdir -p /home/opam/.jupyter
 
-# RUN sudo pip3 install --user --no-cache-dir jupyter
 ENV PATH $PATH:/home/opam/.local/bin
 RUN opam user-setup install && opam install -y jupyter && opam exec -- ocaml-jupyter-opam-genspec
-RUN opam install 
+RUN opam install merlin lwt cohttp cohttp-lwt-unix cohttp-async ppx_jane ppx_let
 RUN jupyter kernelspec install --name ocaml-jupyter "$(opam config var share)/jupyter" --user
 EXPOSE 8888
+RUN mkdir /home/opam/alpaca
 
-COPY entrypoint.sh /
+# COPY entrypoint.sh /
 # ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "jupyter", "lab", "--no-browser", "--ip=*" ]
