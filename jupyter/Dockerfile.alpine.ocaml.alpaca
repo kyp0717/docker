@@ -13,7 +13,7 @@ RUN pip3 install --user --no-cache-dir 'setuptools>=18.5' 'six>=1.9.0' jupyterla
 
 ENV PATH $PATH:/home/opam/.local/bin
 RUN opam user-setup install && opam install -y jupyter && opam exec -- ocaml-jupyter-opam-genspec
-RUN opam install merlin lwt cohttp cohttp-lwt-unix cohttp-async ppx_jane ppx_let
+RUN opam install merlin lwt cohttp cohttp-lwt-unix cohttp-async ppx_jane ppx_let alcotest
 RUN jupyter kernelspec install --name ocaml-jupyter "$(opam config var share)/jupyter" --user
 EXPOSE 8888
 RUN mkdir /home/opam/alpaca
