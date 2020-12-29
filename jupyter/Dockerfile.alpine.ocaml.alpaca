@@ -1,23 +1,62 @@
+
+FROM alpine:latest as builder
+
+WORKDIR /mnt/build/ctags
+
+RUN apk --no-cache add \
+	git \
+	xfce4-dev-tools \
+	build-base
+
+RUN \
+	git clone https://github.com/universal-ctags/ctags \
+	&& cd ctags \
+	&& ./autogen.sh \
+	&& ./configure --prefix=/usr/local \
+	&& make \
+	&& make install
+:
 FROM ocaml/opam:alpine-ocaml-4.11-afl
 
-ENV PATH $PATH:/home/opam/.local/bin
+ENV PATH $PATH:/home/opam/.local/bin  
+ENV    NVIM_CONFIG="/home/opam/.config/nvim" \
+    NVIM_SHARE="/home/opam/.local/share" 
 
+COPY --from=builder /usr/local/bin/ctags /usr/local/bin
 RUN sudo apk add --upgrade --no-cache zlib gmp zeromq python3 && \
     sudo apk add --upgrade --no-cache \
                  --virtual=.build-dependencies \
                  curl m4 perl zlib-dev gmp-dev zeromq-dev libffi-dev python3-dev && \
     sudo apk add cmd:pip3 && \
     sudo pip3 install --upgrade pip 
-RUN pip3 install --user --no-cache-dir 'setuptools>=18.5' 'six>=1.9.0' jupyterlab && \
-        mkdir -p /home/opam/.jupyter
+RUN  pip3 install --user --no-cache-dir 'setuptools>=18.5' 'six>=1.9.0' jupyterlab && \
+    mkdir -p /home/opam/.jupyter
 
-ENV PATH $PATH:/home/opam/.local/bin
-RUN opam user-setup install && opam install -y jupyter && opam exec -- ocaml-jupyter-opam-genspec
-RUN opam install merlin lwt cohttp cohttp-lwt-unix cohttp-async ppx_jane ppx_let alcotest dune
+
+RUN opam user-setup install && \
+    opam install -y jupyter && \
+    opam exec -- ocaml-jupyter-opam-genspec 
+
+# RUN opam install merlin lwt cohttp cohttp-lwt-unix \
+#          cohttp-async ppx_jane ppx_let alcotest dune \
+#          yaml junit_alcotest ezjsonm bos 
+
 RUN jupyter kernelspec install --name ocaml-jupyter "$(opam config var share)/jupyter" --user
-EXPOSE 8888
-RUN mkdir /home/opam/alpaca
+RUN sudo apk add --upgrade --no-cache neovim tmux zsh fzf bash bash-completion util-linux
+RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
+    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' && \
+    echo 'alias nv="nvim"' >> ~/.bashrc
 
+
+RUN mkdir -p $NVIM_CONFIG /home/opam/alpaca
+COPY ./init.vim $NVIM_CONFIG/init.vim
+COPY ./gruvbox.vim $NVIM_CONFIG/gruvbox.vim
+COPY ./airline.vim $NVIM_CONFIG/airline.vim
+COPY ./settings.vim $NVIM_CONFIG/settings.vim
+COPY ./mappings.vim $NVIM_CONFIG/mappings.vim
+
+EXPOSE 8888
 # COPY entrypoint.sh /
 # ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "jupyter", "lab", "--no-browser", "--ip=*" ]
