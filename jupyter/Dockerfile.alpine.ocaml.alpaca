@@ -50,11 +50,8 @@ RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/inst
 
 
 RUN mkdir -p $NVIM_CONFIG /home/opam/alpaca
-COPY ./init.vim $NVIM_CONFIG/init.vim
-COPY ./gruvbox.vim $NVIM_CONFIG/gruvbox.vim
-COPY ./airline.vim $NVIM_CONFIG/airline.vim
-COPY ./settings.vim $NVIM_CONFIG/settings.vim
-COPY ./mappings.vim $NVIM_CONFIG/mappings.vim
+COPY ./*.vim $NVIM_CONFIG/
+
 
 EXPOSE 8888
 # COPY entrypoint.sh /
