@@ -10,8 +10,6 @@ call plug#begin('~/.config/nvim/autoload/plugged')
 
   " Change dates fast
   Plug 'tpope/vim-speeddating'
-  " Convert binary, hex, etc..
-  Plug 'glts/vim-radical'
   " Files
   Plug 'tpope/vim-eunuch'
   " Repeat stuff
@@ -27,29 +25,21 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'justinmk/vim-sneak'
     Plug 'unblevable/quick-scope'
     " Add some color
-    Plug 'norcalli/nvim-colorizer.lua'
     Plug 'junegunn/rainbow_parentheses.vim'
     " Cool Icons
     Plug 'ryanoasis/vim-devicons'
     " Auto pairs for '(' '[' '{' 
     Plug 'jiangmiao/auto-pairs'
     " Themes
-    " Status Line
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-    Plug 'morhetz/gruvbox'
     " FZF
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
     " Git
-    Plug 'airblade/vim-gitgutter'
     Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-rhubarb'
     Plug 'junegunn/gv.vim'
     " Terminal
     " Snippets
-    Plug 'honza/vim-snippets'
-    Plug 'mattn/emmet-vim'
 call plug#end()
 
 " Automatically install missing plugins on startup
