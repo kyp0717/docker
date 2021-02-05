@@ -3,7 +3,7 @@ FROM ocaml/opam:ubuntu-20.04-ocaml-4.10
 ENV PATH $PATH:/home/opam/.local/bin  
 
 RUN sudo apt-get update && sudo apt-get install -y apt-utils python3 python3-pip  \
-                 curl m4 perl libffi-dev python3-dev pkg-config  libgmp-dev libzmq3-dev 
+                 curl m4 perl libffi-dev python3-dev pkg-config  libgmp-dev libzmq3-dev libressl-dev
 RUN pip3 install  --upgrade pip
 RUN pip3 install  --user --no-cache-dir 'setuptools>=18.5' 'six>=1.9.0' jupyterlab && \
     mkdir -p /home/opam/.jupyter

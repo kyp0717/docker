@@ -5,7 +5,7 @@ ENV PATH $PATH:/home/opam/.local/bin
 RUN sudo apk add --upgrade --no-cache zlib gmp zeromq python3 && \
     sudo apk add --upgrade --no-cache \
                  --virtual=.build-dependencies \
-                 curl m4 perl zlib-dev gmp-dev zeromq-dev libffi-dev python3-dev && \
+                 curl m4 perl zlib-dev gmp-dev zeromq-dev libffi-dev python3-dev libressl-dev && \
     sudo apk add cmd:pip3 && \
     sudo pip3 install --upgrade pip 
 RUN  pip3 install --user --no-cache-dir 'setuptools>=18.5' 'six>=1.9.0' jupyterlab && \
@@ -16,7 +16,7 @@ RUN opam install -y jupyter && \
     opam exec -- ocaml-jupyter-opam-genspec && \
     opam install lwt cohttp cohttp-lwt-unix \
          cohttp-async ppx_jane ppx_let alcotest dune \
-         yaml junit_alcotest ezjsonm bos 
+         yaml junit_alcotest ezjsonm bos lwt_ssl
 
 RUN jupyter kernelspec install --name ocaml-jupyter "$(opam config var share)/jupyter" --user
 RUN sudo apk add --upgrade --no-cache neovim  zsh fzf bash bash-completion util-linux
@@ -24,7 +24,7 @@ RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/inst
 
 RUN opam env && \ 
     eval $(opam config env) && \
-    opam install merlin && \
+    opam install merlin async && \
     opam user-setup install && \
     opam user-setup install && \
     mkdir -p /home/opam/alpaca
