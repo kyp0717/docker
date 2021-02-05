@@ -24,7 +24,7 @@ RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/inst
 
 RUN opam env && \ 
     eval $(opam config env) && \
-    opam install merlin async && \
+    opam install merlin async atdgen ppx_yojson_conv && \
     opam user-setup install && \
     opam user-setup install && \
     mkdir -p /home/opam/alpaca
