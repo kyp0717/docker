@@ -10,6 +10,11 @@
 
 ;; Download Evil
 (unless (package-installed-p 'evil)
-  (package-install 'evil))
+  (package-install 'evil ))
 
-
+(package-install 'smart-mode-line)
+;; Enable Smart Mode Line 
+; (setq sml/name-width 20)
+; (setq sml/theme 'dark)
+; (require 'smart-mode-line)
+; (sml/setup)

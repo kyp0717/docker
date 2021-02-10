@@ -7,6 +7,8 @@
 (tool-bar-mode -1)
 
 (require 'package)
+; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+; (add-to-list 'package-archives '("gnu"       . "http://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
 ;; and `package-pinned-packages`. Most users will not need or want to do this.
@@ -34,3 +36,21 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(use-package all-the-icons)
+
+(use-package doom-modeline
+    :init (doom-modeline-mode 1)
+    :custom ((doom-modeline-height 15)))
+
+
+(use-package doom-themes
+    :init (load-theme 'doom-dracula t))
+
+
+
+
+; (setq sml/name-width 20)
+; (setq sml/theme 'dark)
+; (require 'smart-mode-line)
+; (sml/setup)
