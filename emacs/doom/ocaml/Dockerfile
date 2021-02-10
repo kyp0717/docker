@@ -65,4 +65,8 @@ RUN git clone --depth 1 https://github.com/kyp0717/doom-emacs ~/.emacs.d
 SHELL ["/bin/bash", "-c"]
 RUN ~/.emacs.d/bin/doom install 
 
+RUN sudo apt-get update && sudo apt-get install software-properties-common  && \
+    sudo add-apt-repository ppa:plt/racket && \
+    sudo apt-get update && sudo apt-get install racket fd ripgrep 
+
 # CMD ["bash", "-c", "emacs; /bin/bash"]
