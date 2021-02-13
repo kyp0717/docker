@@ -1,10 +1,15 @@
 FROM silex/emacs:27-ci
+RUN apt-get update && apt-get install -y wget 
+RUN wget https://github.com/sharkdp/fd/releases/download/v8.2.1/fd-musl_8.2.1_amd64.deb -P /tmp
 
-# RUN mv /etc/apt/sources.list ~/ &&  touch /etc/apt/sources.list
+RUN dpkg -i /tmp/fd-musl_8.2.1_amd64.deb
+RUN  curl -LO https://github.com/BurntSushi/ripgrep/releases/download/12.1.1/ripgrep_12.1.1_amd64.deb
+
+RUN dpkg -i ripgrep_12.1.1_amd64.deb
 RUN apt-get update && apt-get install -y software-properties-common && apt-get update && \
     add-apt-repository -y ppa:plt/racket && \
-    apt-get update && apt-get install -y smlnj racket fd ripgrep && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get update && apt-get install -y smlnj racket && \
+    rm -rf /tmp/* /var/lib/apt/lists/* /root/.cache/*
 # Fix "Couldn't register with accessibility bus" error message
 ENV NO_AT_BRIDGE=1
 ENV UNAME="emacs" \
@@ -28,7 +33,6 @@ COPY emacs_user.sh /tmp/
 RUN chown root /tmp/emacs_user.sh && \
     chmod 700  /tmp/emacs_user.sh && \
     /tmp/emacs_user.sh
-
 USER emacs
 WORKDIR /home/emacs
 # RUN mkdir ~/.emacs.d && mkdir ~/.emacs.d/themes
@@ -40,8 +44,9 @@ RUN git clone --depth 1 https://github.com/kyp0717/doom-emacs ~/.emacs.d
 # RUN git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 SHELL ["/bin/bash", "-c"]
 RUN ~/.emacs.d/bin/doom install 
-COPY ./init.el ~/.doom.d/
-RUN ~/.emacs.d/bin/doom refresh
+RUN sed -i 's/;;sml/sml/g' ~/.doom.d/init.el
+RUN sed -i 's/;;racket/racket/g' ~/.doom.d/init.el
+RUN ~/.emacs.d/bin/doom sync 
 
-# ENTRYPOINT ["emacs"]
+# # ENTRYPOINT ["emacs"]
 # CMD ["-nw"]
