@@ -40,7 +40,8 @@ RUN git clone --depth 1 https://github.com/kyp0717/doom-emacs ~/.emacs.d
 # RUN git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 SHELL ["/bin/bash", "-c"]
 RUN ~/.emacs.d/bin/doom install 
-
+COPY ./init.el ~/.doom.d/
+RUN ~/.emacs.d/bin/doom refresh
 
 # ENTRYPOINT ["emacs"]
 # CMD ["-nw"]
