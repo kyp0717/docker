@@ -1,0 +1,27 @@
+;; source for these config ...
+;; https://github.com/sho-87/dotfiles/blob/master/emacs/init.el
+
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
+;; and `package-pinned-packages`. Most users will not need or want to do this.
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(package-initialize)
+(package-refresh-contents)
+
+; (unless (package-installed-p 'quelpa)
+;   (with-temp-buffer
+;     (url-insert-file-contents "https://raw.githubusercontent.com/quelpa/quelpa/master/quelpa.el")
+;     (eval-buffer)
+;     (quelpa-self-upgrade)))
+
+;; Download packages
+(package-install 'use-package)
+; (package-install 'quelpa)
+(package-install 'evil )
+(package-install 'smart-mode-line)
+(package-install 'powerline)
+(package-install 'smart-mode-line-powerline-theme)
+(package-install 'gruvbox-theme)
+(package-install 'all-the-icons)
