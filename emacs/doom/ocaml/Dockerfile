@@ -32,7 +32,11 @@ RUN sudo apt-get update && \
             openssh-client \
             texinfo \
             fd-find \
-            ripgrep 
+            ripgrep  \
+            neovim \
+            zsh \
+            bash-completion  \
+            m4
 
 # Emacs
 RUN sudo apt-get update && sudo apt-get install -y software-properties-common \
@@ -41,19 +45,15 @@ RUN sudo apt-get update && sudo apt-get install -y software-properties-common \
     && sudo apt-get purge -y software-properties-common \
     && sudo rm -rf /tmp/* /var/lib/apt/lists/* /root/.cache/*
 
-
-RUN sudo apt-get update && sudo apt-get install -y m4 
-
 RUN eval $(opam env) && \
     opam  update && \
     opam switch create 4.10.0+multicore \ 
          --packages=ocaml-variants.4.10.0+multicore  \
          --repositories=multicore=git+https://github.com/ocaml-multicore/multicore-opam.git,default && \
     opam switch 4.10.0+multicore
-RUN sudo apt-get install -y neovim zsh  bash-completion  \
-    && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" 
 
-RUN git clone --depth 1 https://github.com/kyp0717/doom-emacs ~/.emacs.d
+RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"  && \
+    git clone --depth 1 https://github.com/kyp0717/doom-emacs ~/.emacs.d
 ENV PATH="$HOME/.emacs.d/bin:$PATH" 
 RUN doom install
 RUN sed -i 's/;;ocaml/ocaml/g' ~/.doom.d/init.el 
