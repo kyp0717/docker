@@ -1,0 +1,33 @@
+FROM ocaml/opam:ubuntu-20.04-ocaml-4.10
+
+ENV PATH $PATH:/home/opam/.local/bin  
+
+RUN sudo apt-get update && sudo apt-get install -y apt-utils python3 python3-pip  \
+                 curl m4 perl libffi-dev python3-dev pkg-config  libgmp-dev libzmq3-dev
+RUN pip3 install  --upgrade pip
+RUN pip3 install  --user --no-cache-dir 'setuptools>=18.5' 'six>=1.9.0' jupyterlab && \
+    mkdir -p /home/opam/.jupyter
+
+RUN eval $(opam env) && \
+    opam  update && \
+    opam switch create 4.10.0+multicore \
+         --packages=ocaml-variants.4.10.0+multicore  \
+         --repositories=multicore=git+https://github.com/ocaml-multicore/multicore-opam.git,default && \
+    opam switch 4.10.0+multicore
+RUN eval $(opam config env) && \
+    opam install -y merlin utop && \
+    eval $(opam config env) && \
+    opam user-setup install 
+
+RUN sudo apt-get install -y neovim tmux  zsh fzf bash bash-completion 
+RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
+    sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+RUN git clone https://github.com/gpakosz/.tmux.git && \
+    ln -s -f .tmux/.tmux.conf && \
+    cp .tmux/.tmux.conf.local .
+ 
+
+COPY --chown=opam:opam ./*.vim /home/opam/.config/nvim/
+
+

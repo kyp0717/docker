@@ -1,72 +1,82 @@
-ARG VERSION=latest
-FROM ubuntu:$VERSION
-
-MAINTAINER JAremko <w3techplaygound@gmail.com>
-
+FROM ocaml/opam:ubuntu-20.04-ocaml-4.10
 # Fix "Couldn't register with accessibility bus" error message
 ENV NO_AT_BRIDGE=1
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# basic stuff
-RUN echo 'APT::Get::Assume-Yes "true";' >> /etc/apt/apt.conf \
-    && apt-get update && apt-get install \
-    bash \
-    build-essential \
-    dbus-x11 \
-    fontconfig \
-    git \
-    gzip \
-    language-pack-en-base \
-    libgl1-mesa-glx \
-    make \
-    sudo \
-    tar \
-    unzip \
-# su-exec
-    && git clone https://github.com/ncopa/su-exec.git /tmp/su-exec \
-    && cd /tmp/su-exec \
-    && make \
-    && chmod 770 su-exec \
-    && mv ./su-exec /usr/local/sbin/ \
-# Cleanup
-    && apt-get purge build-essential \
-    && apt-get autoremove \
-    && rm -rf /tmp/* /var/lib/apt/lists/* /root/.cache/*
-
-
-# ^^^^^^^ Those layers are shared ^^^^^^^
+RUN sudo apt-get update && \
+    sudo apt-get install -y \
+            curl \
+            gnupg \
+            gpm \
+            imagemagick \
+            ispell \
+            libacl1 \
+            libasound2 \
+            libcanberra-gtk3-module \
+            libdbus-1-3 \
+            libgif7 \
+            libgnutls30 \
+            libgtk-3-0 \
+            libjansson4 \
+            libjpeg8 \
+            liblcms2-2 \
+            libm17n-0 \
+            libpng16-16 \
+            librsvg2-2 \
+            libsm6 \
+            libtiff5 \
+            libx11-xcb1 \
+            libxml2 \
+            libxpm4 \
+            openssh-client \
+            texinfo \
+            fd-find \
+            ripgrep 
 
 # Emacs
-RUN apt-get update && apt-get install software-properties-common \
-    && apt-add-repository ppa:kelleyk/emacs \
-    && apt-get update && apt-get install emacs27 \
-# Cleanup
-    && apt-get purge software-properties-common \
-    && rm -rf /tmp/* /var/lib/apt/lists/* /root/.cache/*
+RUN sudo apt-get update && sudo apt-get install -y software-properties-common \
+    && sudo apt-add-repository ppa:kelleyk/emacs \
+    && sudo apt-get update && sudo apt-get install -y emacs27  \
+    && sudo apt-get purge -y software-properties-common \
+    && sudo rm -rf /tmp/* /var/lib/apt/lists/* /root/.cache/*
 
-ENV UNAME="emacs" \
-    GNAME="emacs" \
-    UHOME="/home/emacs" \
-    UID="1000" \
-    GID="1000" \
-    WORK="/mnt/work" \
-    SHELL="/bin/bash"
 
-COPY asEnvUser.sh /usr/local/sbin/
-# Only for sudoers
-RUN chown root /usr/local/sbin/asEnvUser.sh \
-    && chmod 700  /usr/local/sbin/asEnvUser.sh
+RUN sudo apt-get update && sudo apt-get install -y m4 
 
-RUN /usr/local/sbin/asEnvUser.sh
-USER emacs
+RUN eval $(opam env) && \
+    opam  update && \
+    opam switch create 4.10.0+multicore \ 
+         --packages=ocaml-variants.4.10.0+multicore  \
+         --repositories=multicore=git+https://github.com/ocaml-multicore/multicore-opam.git,default && \
+    opam switch 4.10.0+multicore
+RUN sudo apt-get install -y neovim zsh  bash-completion  \
+    && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" 
+
 RUN git clone --depth 1 https://github.com/kyp0717/doom-emacs ~/.emacs.d
+ENV PATH="$HOME/.emacs.d/bin:$PATH" 
+RUN doom install
+RUN sed -i 's/;;ocaml/ocaml/g' ~/.doom.d/init.el 
 # RUN git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 SHELL ["/bin/bash", "-c"]
-RUN ~/.emacs.d/bin/doom install 
 
-RUN sudo apt-get update && sudo apt-get install software-properties-common  && \
-    sudo add-apt-repository ppa:plt/racket && \
-    sudo apt-get update && sudo apt-get install racket fd ripgrep 
+# # So we don't have to write ~/.emacs.d/bin/doom every time
+# RUN    mkdir ~/.doom.d  # or ~/.config/doom && \
+#     cp ~/.emacs.d/init.example.el ~/.doom.d/init.el && \
+#     cp ~/.emacs.d/core/templates/config.example.el ~/.doom.d/config.el && \
+#     cp ~/.emacs.d/core/templates/packages.example.el ~/.doom.d/packages.el && \
+#     sed -i 's/;;ocaml/ocaml/g' ~/.doom.d/init.el 
+
+RUN doom sync
+
+# RUN emacs --batch -f all-the-icons-install-fonts
+
+RUN eval $(opam config env) && \
+    opam install -y merlin ocp-indent && \
+    eval $(opam config env) 
+    # opam user-setup install 
+
+
+# RUN emacs --batch -f 'all-the-icons-install-fonts
 
 # CMD ["bash", "-c", "emacs; /bin/bash"]
