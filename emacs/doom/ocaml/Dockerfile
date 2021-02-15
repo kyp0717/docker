@@ -36,7 +36,9 @@ RUN sudo apt-get update && \
             neovim \
             zsh \
             bash-completion  \
-            m4
+            m4 \
+            smlnj \
+            racket 
 
 # Emacs
 RUN sudo apt-get update && sudo apt-get install -y software-properties-common \
@@ -56,7 +58,9 @@ RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/inst
     git clone --depth 1 https://github.com/kyp0717/doom-emacs ~/.emacs.d
 ENV PATH="$HOME/.emacs.d/bin:$PATH" 
 RUN doom install
-RUN sed -i 's/;;ocaml/ocaml/g' ~/.doom.d/init.el 
+RUN sed -i 's/;;ocaml/ocaml/g' ~/.doom.d/init.el  
+    sed -i 's/;;racket/racket/g' ~/.doom.d/init.el  
+    sed -i 's/;;sml/sml/g' ~/.doom.d/init.el  
 # RUN git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 SHELL ["/bin/bash", "-c"]
 
