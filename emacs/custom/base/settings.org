@@ -1,0 +1,102 @@
+Super Duper Config
+
+* Packages
+   #+BEGIN_SRC emacs-lisp
+
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
+  ;; and `package-pinned-packages`. Most users will not need or want to do this.
+  ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+  (package-initialize)
+  ;;(package-refresh-contents)
+
+  ;; Download Evil
+  (unless (package-installed-p 'evil)
+    (package-install 'evil ))
+
+  (package-install 'smart-mode-line)
+  (package-install 'powerline)
+  (package-install 'gruvbox-theme)
+  (package-install 'airline-themes)
+  (package-install 'org)
+  (package-install 'ido)
+  (package-install 'tuareg)
+  (package-install 'projectile)
+  (package-install 'company)
+  (package-install 'org-bullets)
+  (package-install 'helm)
+  (package-install 'swiper)
+  (package-install 'evil-org)
+  ;;(package-install 'evil-org-agenda)
+  (package-install 'evil-commentary)
+   #+END_SRC
+* Evil Mode
+** Comments
+   #+BEGIN_SRC emacs-lisp
+    (require 'evil-commentary)
+    (evil-commentary-mode)
+   #+END_SRC
+* Org Mode Config
+** settings
+  #+BEGIN_SRC emacs-lisp
+   (setq org-hide-emphasis-markers t)
+  #+END_SRC
+
+  
+** bullets
+  #+BEGIN_SRC emacs-lisp
+    (use-package org-bullets
+	:config
+	(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))) 
+  #+END_SRC
+
+** evil integration
+  #+BEGIN_SRC emacs-lisp
+    (add-to-list 'load-path "~/.emacs.d/plugins/evil-org-mode")
+    (require 'evil-org)
+    (add-hook 'org-mode-hook 'evil-org-mode)
+    (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys)
+  #+END_SRC
+
+* Completion
+
+** ivy setup
+  #+BEGIN_SRC emacs-lisp
+    ;;(add-to-list 'load-path "~/github/swiper/")
+    (require 'ivy)
+    (ivy-mode 1)
+    (setq ivy-use-virtual-buffers t)
+    (setq ivy-count-format "(%d/%d) ")
+    (global-set-key (kbd "C-s") 'swiper-isearch)
+    (global-set-key (kbd "M-x") 'counsel-M-x)
+    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+    (global-set-key (kbd "M-y") 'counsel-yank-pop)
+    (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+    (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+    (global-set-key (kbd "<f1> l") 'counsel-find-library)
+    (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+    (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+    (global-set-key (kbd "<f2> j") 'counsel-set-variable)
+    (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
+    (global-set-key (kbd "C-c v") 'ivy-push-view)
+    (global-set-key (kbd "C-c V") 'ivy-pop-view)
+
+  #+END_SRC
+
+
+
+* General Settings
+** Don't show startup msg
+   #+BEGIN_SRC emacs-lisp
+   ; (global-hl-mode +1)
+   #+END_SRC
+** Comments
+
+* UI
+** Modeline
+
+* Modes
+
