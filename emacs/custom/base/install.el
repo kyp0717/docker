@@ -18,6 +18,7 @@
 (package-install 'smart-mode-line)
 (package-install 'powerline)
 (package-install 'gruvbox-theme)
+(package-install 'tuareg)
 ;; Enable Smart Mode Line 
 ; (setq sml/name-width 20)
 ; (setq sml/theme 'dark)
