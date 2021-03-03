@@ -28,7 +28,7 @@
  '(custom-safe-themes
    '("7661b762556018a44a29477b84757994d8386d6edee909409fabe0631952dad9" "8d5f22f7dfd3b2e4fc2f2da46ee71065a9474d0ac726b98f647bc3c7e39f2819" default))
  '(package-selected-packages
-   '(evil ido org powerline smart-mode-line swiper ivy use-package tuareg smart-mode-line-powerline-theme projectile org-superstar org-bullets helm gruvbox-theme-dark fzf evil-org evil-commentary evil-collection counsel company command-log-mode beacon all-the-icons airline-themes)))
+   '(vim-commentary windresize eval-in-repl auto-complete merlin smartparens smartparen gruvbox-theme evil ido org powerline smart-mode-line swiper ivy use-package tuareg smart-mode-line-powerline-theme projectile org-superstar org-bullets helm gruvbox-theme-dark fzf evil-org evil-commentary evil-collection counsel company command-log-mode beacon all-the-icons airline-themes)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
