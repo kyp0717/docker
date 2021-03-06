@@ -46,4 +46,6 @@
 (package-install 'ivy-posframe)
 (package-install 'ivy-rich)
 (package-install 'ivy-prescient)
-(package-install 'expand-region)
+(package-install 'marginalia)
+(package-install 'embark)
+(package-install 'embark-consult)
