@@ -59,27 +59,6 @@ Super Duper Config
    : ‘all-the-icons’ is already installed
 
 * General Settings
-** Line Number
-   #+begin_src emacs-lisp
-     (require 'display-line-numbers)
-     (defcustom display-line-numbers-exempt-modes '(vterm-mode eshell-mode shell-mode term-mode ansi-term-mode)
-       "Major modes on which to disable the linum mode, exempts them from global requirement"
-       :group 'display-line-numbers
-       :type 'list
-       :version "green")
-
-     (defun display-line-numbers--turn-on ()
-       "turn on line numbers but excempting certain majore modes defined in `display-line-numbers-exempt-modes'"
-       (if (and
-	    (not (member major-mode display-line-numbers-exempt-modes))
-	    (not (minibufferp)))
-	   (display-line-numbers-mode)))
-
-     (global-display-line-numbers-mode)
-   #+end_src
-
-   #+RESULTS:
-   : t
 
 ** Expand Region
    #+begin_src emacs-lisp
@@ -121,7 +100,7 @@ Super Duper Config
    #+RESULTS:
    : t
 
-** Font Size
+** Global Key Binding
    #+begin_src emacs-lisp
    (global-set-key (kbd "C-=") 'text-scale-increase)
    (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -320,21 +299,6 @@ Super Duper Config
 
    #+RESULTS:
 
-* Ocaml
-  #+begin_src emacs-lisp
-
-    ;; (let ((opam-share (ignore-errors (car (process-lines "opam" "config" "var" "share")))))
-    ;; (when (and opam-share (file-directory-p opam-share))
-    ;; ;; Register Merlin
-    ;; (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share))
-    ;; (autoload 'merlin-mode "merlin" nil t nil)
-    ;; ;; Automatically start it in OCaml buffers
-    ;; (add-hook 'tuareg-mode-hook 'merlin-mode t)
-    ;; (add-hook 'caml-mode-hook 'merlin-mode t)
-    ;; ;; Use opam switch to lookup ocamlmerlin binary
-    ;; (setq merlin-command 'opam)))
-    
-  #+end_src
 * Ivy
 ** ivy generic
    #+begin_src emacs-lisp
@@ -646,28 +610,119 @@ Super Duper Config
 
 * Modes
 
-* Outline Mode
+* Testing Prot Outline Mode
   #+begin_src emacs-lisp
-    ;;; Look into bicycle (tarsius)
-    (use-package bicycle
-      :after outline
-      :bind (:map outline-minor-mode-map
-		  ([C-tab] . bicycle-cycle)
-		  ([S-tab] . bicycle-cycle-global)))
+    (require 'outline)
+    (require 'imenu)
 
-    (use-package prog-mode
-      :config
-      (add-hook 'prog-mode-hook 'outline-minor-mode)
-      (add-hook 'prog-mode-hook 'hs-minor-mode))
+	    ;;;###autoload
+    (defun prot-outline-hide-all ()
+      "Hide all `outline-mode' subtrees."
+      (interactive)
+      (outline-map-region 'outline-hide-subtree (point-min) (point-max)))
+
+
+	;;;###autoload
+    (defun prot-outline-down-heading ()
+      "Move to the next `outline-mode' subtree."
+      (interactive)
+      ;; Hacky, but it kinda works.
+      (outline-up-heading 1 t)
+      (outline-forward-same-level 1))
+
+	;;;###autoload
+    (defun prot-outline-cycle-dwim ()
+      "Convenience wrapper around common `outline-mode' commands.
+	When constructs are hidden, show everything.  While on a
+	headline, or an invisible part of the overlay, cycle the item's
+	visibility.  Else call `indent-for-tab-command'."
+      (interactive)
+      (cond
+       ((eq (outline--cycle-state) (or 'hide-all 'headings-only))
+	(outline-show-all))
+       ((or (outline-on-heading-p) (outline-invisible-p))
+	(outline-cycle))
+       (t
+	(indent-for-tab-command))))
+
+    ;;; Minor mode setup
+
+    (autoload 'org-src-mode "org-src")
+    (defvar outline-minor-faces--font-lock-keywords)
+
+    ;;;###autoload
+    (defun prot-outline-refontify-buffer ()
+      "Re-enable the current buffer's major mode.
+    Add this to `prot-outline-minor-mode-exit-hook'."
+      (let ((minor-modes (prot-common-minor-modes-active)))
+	(when (bound-and-true-p outline-minor-faces)
+	  (font-lock-remove-keywords nil outline-minor-faces--font-lock-keywords))
+	(when (or (derived-mode-p 'text-mode)
+		  (derived-mode-p 'prog-mode))
+	  (funcall major-mode)
+	  ;; REVIEW: Are there any other minor modes we need to account for?
+	  ;; If so, create a defvar and check it here.
+	  (when (member 'org-src-mode minor-modes)
+	    (org-src-mode))
+	  (message "Re-enabled %s" major-mode))))
+
+    (defvar prot-outline-minor-mode-map
+      (let ((map (make-sparse-keymap)))
+	(define-key map (kbd "M-n") 'outline-next-visible-heading)
+	(define-key map (kbd "M-p") 'outline-previous-visible-heading)
+	(define-key map (kbd "C-c C-n") 'outline-next-visible-heading)
+	(define-key map (kbd "C-c C-p") 'outline-previous-visible-heading)
+	(define-key map (kbd "C-c C-f") 'outline-forward-same-level)
+	(define-key map (kbd "C-c C-b") 'outline-backward-same-level)
+	(define-key map (kbd "C-c C-a") 'outline-show-all)
+	(define-key map (kbd "C-c C-q") 'prot-outline-hide-all)
+	(define-key map (kbd "C-c C-u") 'outline-up-heading)
+	(define-key map (kbd "C-c C-d") 'prot-outline-down-heading)
+	(define-key map (kbd "<tab>") 'prot-outline-cycle-dwim)
+	map)
+      "Custom keymap for working with Outlines.")
+
+    (defvar prot-outline-minor-mode-enter-hook nil
+      "Hook used if variable `prot-outline-minor-mode' is non-nil.")
+
+    (defvar prot-outline-minor-mode-exit-hook nil
+      "Hook called when variable `prot-outline-minor-mode' is nil.")
+
+    ;;;###autoload
+    (define-minor-mode prot-outline-minor-mode
+      "Toggles `outline-minor-mode' and extras.
+
+    \\{prot-outline-minor-mode-map}"
+      :init-value nil
+      :lighter " =~"
+      :keymap prot-outline-minor-mode-map
+      :global nil
+      (if prot-outline-minor-mode
+	  (progn
+	    (outline-minor-mode 1)
+	    (run-hooks 'prot-outline-minor-mode-enter-hook))
+	(outline-minor-mode -1)
+	(run-hooks 'prot-outline-minor-mode-exit-hook)))
+
+    (add-hook 'prot-outline-minor-mode-exit-hook #'prot-outline-refontify-buffer)
+
+    ;; TODO: which other modes could prove problematic?
+    (defvar prot-outline-major-modes-blocklist '(org-mode outline-mode markdown-mode))
+
+    ;;;###autoload
+    (defun prot-outline-minor-mode-safe ()
+      "Test to set variable `prot-outline-minor-mode' to non-nil."
+      (interactive)
+      (let ((blocklist prot-outline-major-modes-blocklist)
+	    (mode major-mode))
+	(when (derived-mode-p (car (member mode blocklist)))
+	  (error "Don't use `prot-outline-minor-mode' with `%s'" mode))
+	(if (eq prot-outline-minor-mode nil)
+	    (prot-outline-minor-mode 1)
+	  (prot-outline-minor-mode -1))))
   #+end_src
 
   #+RESULTS:
-  : t
+  : prot-outline-minor-mode-safe
 
-* Test Code / Learning
 
-** demo ivy
-   #+begin_src emacs-lisp
-
-   ;; (ivy-read "My buffers: " (mapcar #'buffer-name (buffer-list)))
-   #+end_src

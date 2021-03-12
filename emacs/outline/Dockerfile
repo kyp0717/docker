@@ -29,7 +29,6 @@ RUN apt-get update && \
             openssh-client \
             texinfo \
     && rm -rf /var/lib/apt/lists/*
-#
 # Fix "Couldn't register with accessibility bus" error message
 ENV NO_AT_BRIDGE=1
 ENV UNAME="emacs" \
@@ -64,7 +63,7 @@ RUN emacs -l ~/.emacs.d/install_base.el -batch
 COPY --chown=emacs:emacs ./init.el /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./settings.org /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./prot-emacs.org /home/emacs/.emacs.d/
-COPY --chown=emacs:emacs ./init.el.ky /home/emacs/.emacs.d/
+# COPY --chown=emacs:emacs ./init.el.ky /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./early-init.el /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./prot-lisp /home/emacs/.emacs.d/prot-lisp
 # SHELL ["/bin/bash", "-c]

@@ -12,21 +12,14 @@
 
 
 ;; Download Evil
-(unless (package-installed-p 'evil)
-  (package-install 'evil ))
-
-(package-install 'modus-vivendi-theme)
+; (unless (package-installed-p 'evil)
+; (package-install 'evil ))
 (package-install 'use-package)
 (package-install 'mood-line)
-;; Enable Smart Mode Line 
-
-; (setq sml/theme 'dark)
-; (require 'smart-mode-line)
-; (sml/setup)
-
-
 (package-install 'counsel)
+(package-install 'command-log-mode)
 (package-install 'spaceline)
+(package-install 'beacon)
 (package-install 'doom-modeline)
 (package-install 'spaceline-all-the-icons)
 (package-install 'ivy)
@@ -40,8 +33,6 @@
 (package-install 'company)
 (package-install 'org-bullets)
 (package-install 'org-superstar)
-(package-install 'helm)
-(package-install 'evil)
 (package-install 'evil-org)
 (package-install 'smartparens)
 (package-install 'evil-commentary)
@@ -51,3 +42,20 @@
 (package-install 'auto-complete)
 (package-install 'windresize)
 (package-install 'eval-in-repl)
+(package-install 'ivy-posframe)
+(package-install 'ivy-rich)
+(package-install 'ivy-prescient)
+(package-install 'expand-region)
+; (package-install 'embark)
+; (package-install 'marginalia)
+; (package-install 'consult)
+; (package-install 'which-key)
+; (package-install 'async)
+; (package-install 'orderless)
+; (package-install 'embark-consult)
+; (package-install 'visual-regexp)
+; (package-install 'wgrep)
+; (package-install 'dired-subtree)
+; (package-install 'trashed)
+; (package-install 'scratch)
+(package-install 'bicycle)

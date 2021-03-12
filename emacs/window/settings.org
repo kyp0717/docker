@@ -59,27 +59,6 @@ Super Duper Config
    : ‘all-the-icons’ is already installed
 
 * General Settings
-** Line Number
-   #+begin_src emacs-lisp
-     (require 'display-line-numbers)
-     (defcustom display-line-numbers-exempt-modes '(vterm-mode eshell-mode shell-mode term-mode ansi-term-mode)
-       "Major modes on which to disable the linum mode, exempts them from global requirement"
-       :group 'display-line-numbers
-       :type 'list
-       :version "green")
-
-     (defun display-line-numbers--turn-on ()
-       "turn on line numbers but excempting certain majore modes defined in `display-line-numbers-exempt-modes'"
-       (if (and
-	    (not (member major-mode display-line-numbers-exempt-modes))
-	    (not (minibufferp)))
-	   (display-line-numbers-mode)))
-
-     (global-display-line-numbers-mode)
-   #+end_src
-
-   #+RESULTS:
-   : t
 
 ** Expand Region
    #+begin_src emacs-lisp
@@ -121,7 +100,7 @@ Super Duper Config
    #+RESULTS:
    : t
 
-** Font Size
+** Global Key Binding
    #+begin_src emacs-lisp
    (global-set-key (kbd "C-=") 'text-scale-increase)
    (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -645,24 +624,6 @@ Super Duper Config
    #+end_src
 
 * Modes
-
-* Outline Mode
-  #+begin_src emacs-lisp
-    ;;; Look into bicycle (tarsius)
-    (use-package bicycle
-      :after outline
-      :bind (:map outline-minor-mode-map
-		  ([C-tab] . bicycle-cycle)
-		  ([S-tab] . bicycle-cycle-global)))
-
-    (use-package prog-mode
-      :config
-      (add-hook 'prog-mode-hook 'outline-minor-mode)
-      (add-hook 'prog-mode-hook 'hs-minor-mode))
-  #+end_src
-
-  #+RESULTS:
-  : t
 
 * Test Code / Learning
 

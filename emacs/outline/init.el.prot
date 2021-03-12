@@ -9,8 +9,6 @@
 
 ;;; Code:
 
-;; manual load of window.el
-(add-to-list 'load-path' "~/.emacs/prot-lisp/")
 (require 'package)
 
 (add-to-list 'package-archives
@@ -37,15 +35,6 @@ init' file is `prot-emacs-autoinstall-elpa'.
 
 See `prot-emacs-basic-init-setup' for the actual initialisation
 process.")
-
-(defun prot-emacs-basic-init-setup ()
-  "Load 'basic-init.el' if it exists.
-This is meant to evaluate forms that control the rest of my Emacs
-setup."
-  (let* ((init prot-emacs-basic-init)
-         (file (thread-last user-emacs-directory (expand-file-name init))))
-    (when (file-exists-p file)
-      (load-file file))))
 
 ;; This variable is incremented in prot-emacs.org.  The idea is to
 ;; produce a list of packages that we want to install on demand from an

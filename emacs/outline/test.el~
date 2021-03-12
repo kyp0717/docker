@@ -1,0 +1,8 @@
+
+;;;; head1
+(defun f1 ()
+  (message "hello"))
+
+;;;; head12
+(defun f2 ()
+  (message "goodbye"))
