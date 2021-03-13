@@ -53,7 +53,7 @@ USER emacs
 WORKDIR /home/emacs
 
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-RUN mkdir ~/.emacs.d && mkdir ~/.emacs.d/themes
+RUN mkdir ~/.emacs.d && mkdir ~/.emacs.d/themes 
 RUN git clone https://gitlab.com/protesilaos/modus-themes.git ~/.emacs.d/modus-themes
 
 COPY --chown=emacs:emacs ./install*.el /home/emacs/.emacs.d/

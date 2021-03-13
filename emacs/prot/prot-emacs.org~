@@ -1551,15 +1551,15 @@ project's window configuration, while =C-x p j= will jump to an already
 stored layout.
 
 #+begin_src emacs-lisp
-  ;; Project repo: <https://github.com/karthink/project-x>.  This is one
-  ;; of the packages I handle manually via git, at least until it becomes
-  ;; available through an ELPA.
-  ;;
-  ;; `prot-emacs-manual-package' is defined in my init.el
-  ;; (prot-emacs-manual-package 'project-x
-  ;;   (setq project-x-window-list-file (locate-user-emacs-file "project-x-window-list"))
-  ;;   (setq project-x-local-identifier ".project")
-  ;;   (project-x-mode 1))
+;; Project repo: <https://github.com/karthink/project-x>.  This is one
+;; of the packages I handle manually via git, at least until it becomes
+;; available through an ELPA.
+;;
+;; `prot-emacs-manual-package' is defined in my init.el
+(prot-emacs-manual-package 'project-x
+  (setq project-x-window-list-file (locate-user-emacs-file "project-x-window-list"))
+  (setq project-x-local-identifier ".project")
+  (project-x-mode 1))
 #+end_src
 
 *** Completion for recent files and directories (prot-recentf.el)
@@ -3561,17 +3561,17 @@ that certain git forges encourage.  I prefer this approach and am eager
 to see it getting more widespread adoption.
 
 #+begin_src emacs-lisp
-  ;; Project repo: <https://git.sr.ht/~yoctocell/git-email>.  This is one
-  ;; of the packages I handle manually via git, at least until it becomes
-  ;; available through an ELPA.
-  ;;
-  ;; `prot-emacs-manual-package' is defined in my init.el
-  ;; (prot-emacs-manual-package 'git-email
-  ;;   (with-eval-after-load 'gnus
-  ;;     (require 'git-email-gnus)
-  ;;     (git-email-gnus-mode 1))
-  ;;   (define-key global-map (kbd "C-x v RET") #'git-email-format-patch) ; VC prefix and C-m
-  ;;   (define-key dired-mode-map (kbd "C-x v RET") #'git-email-send-email))
+;; Project repo: <https://git.sr.ht/~yoctocell/git-email>.  This is one
+;; of the packages I handle manually via git, at least until it becomes
+;; available through an ELPA.
+;;
+;; `prot-emacs-manual-package' is defined in my init.el
+(prot-emacs-manual-package 'git-email
+  (with-eval-after-load 'gnus
+    (require 'git-email-gnus)
+    (git-email-gnus-mode 1))
+  (define-key global-map (kbd "C-x v RET") #'git-email-format-patch) ; VC prefix and C-m
+  (define-key dired-mode-map (kbd "C-x v RET") #'git-email-send-email))
 #+end_src
 
 *** Interactive and powerful git front-end (Magit)
