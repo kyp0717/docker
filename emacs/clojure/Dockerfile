@@ -1,9 +1,26 @@
+FROM debian:latest as parinfer
+
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y \
+            curl \
+            gnupg \
+            gpm \
+            clang \
+            cargo 
+
+RUN apt-get install -y git 
+RUN cd tmp/ && git clone https://github.com/eraserhd/parinfer-rust.git 
+RUN cd /tmp/parinfer-rust && cargo build --release
+
+
 FROM andreacorallo/emacs-nativecomp
 
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
             curl \
+            git \
             gnupg \
             gpm \
             imagemagick \
@@ -51,7 +68,7 @@ ENV UNAME="emacs" \
     WORK="/mnt/work" \
     SHELL="/bin/bash"
 
-RUN apt update && apt install -y zsh neovim git  && \
+RUN apt update && apt install -y zsh  && \
     rm -rf /tmp/* /var/lib/apt/lists/* /root/.cache/*
 
 COPY emacs_user.sh /tmp/
@@ -64,14 +81,16 @@ USER emacs
 WORKDIR /home/emacs
 
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-RUN mkdir ~/.emacs.d && mkdir ~/.emacs.d/themes
+RUN mkdir ~/.emacs.d && mkdir ~/.emacs.d/themes && mkdir ~/.emacs.d/parinfer-rust
 RUN git clone https://gitlab.com/protesilaos/modus-themes.git ~/.emacs.d/modus-themes
+        
 
 COPY --chown=emacs:emacs ./install*.el /home/emacs/.emacs.d/
 RUN emacs -l ~/.emacs.d/install_base.el -batch 
 
 COPY --chown=emacs:emacs ./init.el /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./settings.org /home/emacs/.emacs.d/
+COPY --from=parinfer  /tmp/parinfer-rust/target/release/* /home/emacs/.emacs.d/parinfer-rust/
 
 
 # ENTRYPOINT ["emacs"]
