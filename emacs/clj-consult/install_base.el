@@ -50,4 +50,7 @@
 (package-install 'bicycle)
 (package-install 'cider)
 (package-install 'selectrum)
-(package-install 'prescient)
+(package-install 'docker)
+(package-install 'dockerfile-mode)
+(package-install 'outline-minor-faces)
+

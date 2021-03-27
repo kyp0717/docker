@@ -74,6 +74,7 @@ RUN emacs -l ~/.emacs.d/install_base.el -batch
 
 COPY --chown=emacs:emacs ./init.el /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./settings.org /home/emacs/.emacs.d/
+COPY --chown=emacs:emacs ./config.el /home/emacs/.emacs.d/
 
 
 # ENTRYPOINT ["emacs"]

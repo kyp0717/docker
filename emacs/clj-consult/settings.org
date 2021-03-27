@@ -62,7 +62,7 @@ Super Duper Config
    #+begin_src emacs-lisp
      (require 'expand-region)
      (global-set-key (kbd "s-=") 'er/expand-region)
-   
+
    #+end_src
 ** Coding System
    #+begin_src emacs-lisp
@@ -348,9 +348,9 @@ Super Duper Config
 
   #+RESULTS:
   : t
-
   
-* Orderless & Consult
+  
+* Orderless
   #+begin_src emacs-lisp
 
     (use-package orderless
@@ -358,9 +358,12 @@ Super Duper Config
       :custom (completion-styles '(orderless)))
 
     (selectrum-mode +1)
-    (selectrum-prescient-mode +1)
-    (prescient-mode +1)
+    ;; (selectrum-prescient-mode +1)
 
+  #+end_src
+  
+* Consult
+  #+begin_src emacs-lisp
     ;; Example configuration for Consult
     (use-package consult
       ;; Replace bindings. Lazily loaded due by `use-package'.
