@@ -18,4 +18,4 @@
   :config (setq inhibit-compacting-font-caches t))
 ; (use-package all-the-icons)
 
-load-file (expand-file-name "config.el" user-emacs-directory))
+(load-file (expand-file-name "config.el" user-emacs-directory))

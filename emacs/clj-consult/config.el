@@ -100,7 +100,7 @@
 	 ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complet-command
 	 ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
 	 ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-	 ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+	 ("C-x 5 b" . consult-buffer-other-frame))  ;; orig. switch-to-buffer-other-frame
 	 ;; The :init configuration is always executed (Not lazy)
-	 :init))
+	 :init)
 
