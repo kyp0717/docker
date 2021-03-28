@@ -9,7 +9,7 @@
   (package-install 'use-package))           ; Install latest use-package
 (require 'use-package)
 
-(org-babel-load-file (expand-file-name "~/.emacs.d/settings.org"))
+;; (org-babel-load-file (expand-file-name "~/.emacs.d/settings.org"))
 ;; Enable company in all buffers
 ;; (add-hook 'after-init-hook 'global-company-mode)
 
@@ -18,3 +18,4 @@
   :config (setq inhibit-compacting-font-caches t))
 ; (use-package all-the-icons)
 
+(load-file (expand-file-name "config.el" user-emacs-directory))

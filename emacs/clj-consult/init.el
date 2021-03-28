@@ -14,8 +14,8 @@
 ;; (add-hook 'after-init-hook 'global-company-mode)
 
 ;; All the icons
-(use-package all-the-icons 
-  :config (setq inhibit-compacting-font-caches t))
+;; (use-package all-the-icons 
+;;   :config (setq inhibit-compacting-font-caches t))
 ; (use-package all-the-icons)
 
 (load-file (expand-file-name "config.el" user-emacs-directory))

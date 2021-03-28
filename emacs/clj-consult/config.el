@@ -27,6 +27,39 @@
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
             
+;;;; line num
+(require 'display-line-numbers)
+(defcustom display-line-numbers-exempt-modes '(vterm-mode eshell-mode shell-mode term-mode ansi-term-mode)
+  "Major modes on which to disable the linum mode, exempts them from global requirement"
+  :group 'display-line-numbers
+  :type 'list
+  :version "green")
+
+(defun display-line-numbers--turn-on ()
+  "turn on line numbers but excempting certain majore modes defined in `display-line-numbers-exempt-modes'"
+  (if (and
+       (not (member major-mode display-line-numbers-exempt-modes))
+       (not (minibufferp)))
+      (display-line-numbers-mode)))
+
+(global-display-line-numbers-mode)
+
+
+;;;; start up msg repress
+
+(tool-bar-mode -1)
+(toggle-scroll-bar -1)
+(setq inhibit-startup-screen t)  
+
+(global-hl-line-mode t) ;; This highlights the current line in the buffer
+
+(use-package beacon ;; This applies a beacon effect to the highlighted line
+  :ensure t
+  :config
+  (beacon-mode 1))
+; (global-hl-mode +1)
+
+
 ;;; Outline Mode
 ;; (use-package bicycle
 ;;   :after outline

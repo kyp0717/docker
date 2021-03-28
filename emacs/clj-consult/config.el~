@@ -1,5 +1,25 @@
 
 ;;; Geneneral Setting
+;;;; modus theme
+(add-to-list 'load-path "~/.emacs.d/modus-themes")
+(require 'modus-themes)
+;; Load the theme files before enabling a theme (else you get an error).
+(modus-themes-load-themes)
+(modus-themes-load-vivendi)             ; Dark theme
+
+;; Theme settings
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+
+(use-package spaceline :ensure t
+  :config
+  (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
+
+(use-package spaceline-config :ensure spaceline
+  :config
+  (spaceline-helm-mode 1)
+  (spaceline-emacs-theme))
+
+
 ;;;; expand region
 (require 'expand-region)
 (global-set-key (kbd "s-=") 'er/expand-region)
@@ -80,7 +100,7 @@
 	 ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complet-command
 	 ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
 	 ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-	 ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+	 ("C-x 5 b" . consult-buffer-other-frame))  ;; orig. switch-to-buffer-other-frame
 	 ;; The :init configuration is always executed (Not lazy)
-	 :init))
+	 :init)
 
