@@ -99,8 +99,10 @@
 (use-package evil-collection
   :after evil
   ;; :ensure t
-  :init (setq evil-collection-outline-bind-tab-p t)
-        (setq evil-collection-outline-enable-in-minor-mode-p t)
+  :init
+  (setq evil-collection-outline-bind-tab-p t)
+  (setq evil-collection-outline-enable-in-minor-mode-p t)
+  (setq outline-blank-line t)
   :config
   (evil-collection-init 'outline)
   )
