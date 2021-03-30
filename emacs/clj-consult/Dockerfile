@@ -65,7 +65,11 @@ USER emacs
 WORKDIR /home/emacs
 
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-RUN mkdir ~/.emacs.d && mkdir ~/.emacs.d/themes && mkdir ~/.emacs.d/parinfer-rust
+RUN mkdir ~/.emacs.d && \
+    mkdir ~/.emacs.d/themes && \ 
+    mkdir ~/.emacs.d/parinfer-rust && \
+    mkdir ~/.emacs.d/custom
+
 RUN git clone https://gitlab.com/protesilaos/modus-themes.git ~/.emacs.d/modus-themes
         
 
@@ -75,6 +79,7 @@ RUN emacs -l ~/.emacs.d/install_base.el -batch
 COPY --chown=emacs:emacs ./init.el /home/emacs/.emacs.d/
 #COPY --chown=emacs:emacs ./settings.org /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./config.el /home/emacs/.emacs.d/
+COPY --chown=emacs:emacs ./custom/* /home/emacs/.emacs.d/custom/
 
 
 # ENTRYPOINT ["emacs"]

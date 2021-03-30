@@ -1,7 +1,9 @@
 
+
 ;;; Geneneral Setting
 ;;;; modus theme
 (add-to-list 'load-path "~/.emacs.d/modus-themes")
+(add-to-list 'load-path "~/.emacs.d/custom")
 (require 'modus-themes)
 ;; Load the theme files before enabling a theme (else you get an error).
 (modus-themes-load-themes)
@@ -68,10 +70,10 @@
 ;; 	      ("<C-tab>" . bicycle-cycle-global)))
 
 
-(use-package prog-mode
-  :config
-  (add-hook 'prog-mode-hook 'outline-minor-mode)
-  (add-hook 'prog-mode-hook 'hs-minor-mode))
+;; (use-package prog-mode
+;;   :config
+;;  (add-hook 'prog-mode-hook 'outline-minor-mode)
+;;  (add-hook 'prog-mode-hook 'hs-minor-mode))
 
 (use-package outline-minor-faces
   :after outline
@@ -79,35 +81,81 @@
                     'outline-minor-faces-add-font-lock-keywords))
 
 ;;; Evil Mode
-(use-package evil 
-  :init
-  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
-  (setq evil-want-keybinding nil)
-  :config
-  (evil-mode 1)
-  (setq evil-emacs-state-cursor '("red" box)
-	evil-normal-state-cursor '("green" box)
-	evil-visual-state-cursor '("orange" box)
-	evil-insert-state-cursor '("yellow" bar)
-	evil-replace-state-cursor '("red" bar)
-	evil-operator-state-cursor '("red" hollow)
-	evil-cross-lines t)
-  )
+;; (use-package evil 
+;;   :init
+;;   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+;;   (setq evil-want-keybinding nil)
+;;   :config
+;;   (evil-mode 1)
+;;   (setq evil-emacs-state-cursor '("red" box)
+;; 	evil-normal-state-cursor '("green" box)
+;; 	evil-visual-state-cursor '("orange" box)
+;; 	evil-insert-state-cursor '("yellow" bar)
+;; 	evil-replace-state-cursor '("red" bar)
+;; 	evil-operator-state-cursor '("red" hollow)
+;; 	evil-cross-lines t)
+;;   )
+
+(setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+(setq evil-want-keybinding nil)
+(require 'evil)
+
+(evil-mode 1)
+
+;; (setq evil-emacs-state-cursor '("red" box)
+;;       evil-normal-state-cursor '("green" box)
+;;       evil-visual-state-cursor '("orange" box)
+;;       evil-insert-state-cursor '("yellow" bar)
+;;       evil-replace-state-cursor '("red" bar)
+;;       evil-operator-state-cursor '("red" hollow)
+;;       evil-cross-lines t)
+(setq evil-collection-outline-bind-tab-p t)
+(setq evil-collection-outline-enable-in-minor-mode-p t)
+(setq outline-blank-line t)
+(setq evil-collection-mode-list nil)
+(push 'ky-outline evil-collection-mode-list)
+(when (require 'evil-collection nil t)
+   (evil-collection-init))
+
+(defun ky/outline-hide-all ()
+  (local-set-key (kbd "C-TAB") 'outline-hide-sublevel))
+
+
+;;
+;; (add-hook 'outline-minor-mode-hook #'ky/outline-hide-all)
+;; (add-hook 'outline-mode-hook 'ky/outline-hide-all)
+;; (add-hook 'evil-collection-setup-hook #'ky/outline-hide-all)
+
+;; (eval-after-load 'evil
+;; (define-key outline-mode-map [C-tab] 'outline-hide-sublevels))
+;;(global-set-key [C-tab] 'outline-hide-sublevels)
 
 
 
-(use-package evil-collection
- ;; :bind (:map outline-mode-map
-	    ;; ("C-z z" . outline-hide-sublevels))
- :after evil
-  ;; :ensure t
-  :init
-  (setq evil-collection-outline-bind-tab-p t)
-  (setq evil-collection-outline-enable-in-minor-mode-p t)
-  (setq outline-blank-line t)
-  :config
-  (evil-collection-init 'outline)
-  )
+;;;; evil collection
+;; (use-package evil-collection
+;;   :bind (:map outline-minor-mode-map
+;; 	    ([C-tab] . outline-hide-sublevels))
+;;   :after evil
+;;   ;; :ensure t
+;;   :init
+;;   (setq evil-collection-outline-bind-tab-p t)
+;;   (setq evil-collection-outline-enable-in-minor-mode-p t)
+;;   (setq outline-blank-line t)
+;;   :config
+;;   (evil-collection-init 'outline)
+;;   )
+
+;; (add-hook 'outline-mode-hook
+;; 	  (lambda () (local-set-key [C-tab] 'outline-hide-sublevels)))
+
+;; (eval-after-load 'outline
+;;     (define-key evil-normal-state-map [C-tab] 'outline-hide-sublevels))
+
+
+
+
+
 
 ;;;; Comments
 (require 'evil-commentary)
