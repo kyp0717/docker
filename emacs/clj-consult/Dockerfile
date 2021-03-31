@@ -80,6 +80,8 @@ COPY --chown=emacs:emacs ./init.el /home/emacs/.emacs.d/
 #COPY --chown=emacs:emacs ./settings.org /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./config.el /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./custom/* /home/emacs/.emacs.d/custom/
+RUN mkdir /home/emacs/.emacs.d/elpa/evil-collection-20210323.310/modes/ky-outline
+COPY --chown=emacs:emacs ./custom/* /home/emacs/.emacs.d/elpa/evil-collection-20210323.310/modes/ky-outline
 
 
 # ENTRYPOINT ["emacs"]

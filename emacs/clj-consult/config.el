@@ -12,19 +12,19 @@
 ;; Theme settings
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-(use-package spaceline :ensure t
-  :config
-  (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
+;; (use-package spaceline :ensure t
+;;   :config
+;;   (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
 
-(use-package spaceline-config :ensure spaceline
-  :config
-  (spaceline-helm-mode 1)
-  (spaceline-emacs-theme))
+;; (use-package spaceline-config :ensure spaceline
+;;   :config
+;;   (spaceline-helm-mode 1)
+;;   (spaceline-emacs-theme))
 
 
 ;;;; expand region
 (require 'expand-region)
-(global-set-key (kbd "s-=") 'er/expand-region)
+(global-set-key (kbd "<f12>") 'er/expand-region)
 ;;;; font size
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -70,10 +70,10 @@
 ;; 	      ("<C-tab>" . bicycle-cycle-global)))
 
 
-;; (use-package prog-mode
-;;   :config
-;;  (add-hook 'prog-mode-hook 'outline-minor-mode)
-;;  (add-hook 'prog-mode-hook 'hs-minor-mode))
+(use-package prog-mode
+  :config
+ (add-hook 'prog-mode-hook 'outline-minor-mode)
+ (add-hook 'prog-mode-hook 'hs-minor-mode))
 
 (use-package outline-minor-faces
   :after outline
@@ -95,7 +95,7 @@
 ;; 	evil-operator-state-cursor '("red" hollow)
 ;; 	evil-cross-lines t)
 ;;   )
-
+;;;; evil main
 (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
 (setq evil-want-keybinding nil)
 (require 'evil)
@@ -109,13 +109,15 @@
 ;;       evil-replace-state-cursor '("red" bar)
 ;;       evil-operator-state-cursor '("red" hollow)
 ;;       evil-cross-lines t)
-(setq evil-collection-outline-bind-tab-p t)
-(setq evil-collection-outline-enable-in-minor-mode-p t)
-(setq outline-blank-line t)
-(setq evil-collection-mode-list nil)
-(push 'ky-outline evil-collection-mode-list)
-(when (require 'evil-collection nil t)
-   (evil-collection-init))
+;;(setq evil-collection-outline-bind-tab-p t)
+;;(setq evil-collection-outline-enable-in-minor-mode-p t)
+;;(setq outline-blank-line t)
+;; (setq evil-collection-mode-list nil)
+;; (push 'ky-outline evil-collection-mode-list)
+;; (when (require 'evil-collection nil t)
+;;    (evil-collection-init 'outline))
+
+;;(with-eval-after-load 'outline (evil-collection-outline-setup))
 
 (defun ky/outline-hide-all ()
   (local-set-key (kbd "C-TAB") 'outline-hide-sublevel))
@@ -133,18 +135,35 @@
 
 
 ;;;; evil collection
-;; (use-package evil-collection
+(use-package evil-collection
 ;;   :bind (:map outline-minor-mode-map
 ;; 	    ([C-tab] . outline-hide-sublevels))
-;;   :after evil
-;;   ;; :ensure t
-;;   :init
-;;   (setq evil-collection-outline-bind-tab-p t)
-;;   (setq evil-collection-outline-enable-in-minor-mode-p t)
-;;   (setq outline-blank-line t)
-;;   :config
-;;   (evil-collection-init 'outline)
-;;   )
+   :after evil
+   ;; :ensure t
+   :init
+   (setq evil-collection-outline-bind-tab-p t)
+   (setq evil-collection-outline-enable-in-minor-mode-p t)
+   (setq outline-blank-line t)
+   :config
+   (evil-collection-init 'outline)
+   )
+
+(evil-collection-define-key 'normal 'outline-mode-map
+    ;; folding
+    ;; Evil default keys:
+    ;; zO: Show recursively for current branch only.
+    ;; za: Toggle first level like outline-toggle-children.
+    ;; zc: Hide complete subtree.
+    "zc" 'outline-hide-sublevels ; Hide all bodies, Emacs has "C-c C-t".
+    ;; zm: Show only root notes.
+    ;; zo: Show current node like "za".
+    ;; zr: Show everything.
+    ;; "ze" 'outline-hide-entry
+    ;; "zE" 'outline-show-entry
+    ;; "zl" 'outline-hide-leaves
+    ;; "zb" 'outline-show-branches
+    ;; "zo" 'outline-hide-other
+    ) ; Hide all bodies, Emacs has "C-c C-t".
 
 ;; (add-hook 'outline-mode-hook
 ;; 	  (lambda () (local-set-key [C-tab] 'outline-hide-sublevels)))
@@ -157,7 +176,7 @@
 
 
 
-;;;; Comments
+;;;; comments
 (require 'evil-commentary)
 (evil-commentary-mode)
 ;; (evil-collection-init)
