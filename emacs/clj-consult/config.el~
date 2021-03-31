@@ -1,5 +1,4 @@
 
-
 ;;; Geneneral Setting
 ;;;; modus theme
 (add-to-list 'load-path "~/.emacs.d/modus-themes")
@@ -12,14 +11,14 @@
 ;; Theme settings
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 
-(use-package spaceline :ensure t
-  :config
-  (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
+;; (use-package spaceline :ensure t
+;;   :config
+;;   (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
 
-(use-package spaceline-config :ensure spaceline
-  :config
-  (spaceline-helm-mode 1)
-  (spaceline-emacs-theme))
+;; (use-package spaceline-config :ensure spaceline
+;;   :config
+;;   (spaceline-helm-mode 1)
+;;   (spaceline-emacs-theme))
 
 
 ;;;; expand region
@@ -27,7 +26,7 @@
 (global-set-key (kbd "<f12>") 'er/expand-region)
 ;;;; font size
 (global-set-key (kbd "C-=") 'text-scale-increase)
-(global-set-key (kbd "_") 'text-scale-decrease)
+(global-set-key (kbd "C--") 'text-scale-decrease)
             
 ;;;; line num
 (require 'display-line-numbers)
@@ -70,10 +69,10 @@
 ;; 	      ("<C-tab>" . bicycle-cycle-global)))
 
 
-;; (use-package prog-mode
-;;   :config
-;;  (add-hook 'prog-mode-hook 'outline-minor-mode)
-;;  (add-hook 'prog-mode-hook 'hs-minor-mode))
+(use-package prog-mode
+  :config
+ (add-hook 'prog-mode-hook 'outline-minor-mode)
+ (add-hook 'prog-mode-hook 'hs-minor-mode))
 
 (use-package outline-minor-faces
   :after outline
@@ -95,7 +94,7 @@
 ;; 	evil-operator-state-cursor '("red" hollow)
 ;; 	evil-cross-lines t)
 ;;   )
-
+;;;; evil main
 (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
 (setq evil-want-keybinding nil)
 (require 'evil)
@@ -176,7 +175,7 @@
 
 
 
-;;;; Comments
+;;;; comments
 (require 'evil-commentary)
 (evil-commentary-mode)
 ;; (evil-collection-init)
@@ -250,11 +249,12 @@
          ("M-s l" . consult-line)
          ("M-s m" . consult-multi-occur)
          ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
          ;; Isearch integration
          ("M-s e" . consult-isearch)
+         ;; ("C-s" . consult-isearch)
          :map isearch-mode-map
          ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
+         ;; ("C-s" . consult-isearch)                 ;; orig. isearch-edit-string
          ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
          ("M-s l" . consult-line))                 ;; required by consult-line to detect isearch
 

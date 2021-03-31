@@ -32,6 +32,7 @@
 (package-install 'fzf)
 (package-install 'merlin)
 (package-install 'auto-complete)
+(package-install 'company)
 (package-install 'windresize)
 (package-install 'eval-in-repl)
 (package-install 'expand-region)
@@ -54,5 +55,5 @@
 (package-install 'dockerfile-mode)
 (package-install 'outline-minor-faces)
 (package-install 'undo-tree)
-(package-install 'goto-chg)
+(package-install 'paredit)
 
