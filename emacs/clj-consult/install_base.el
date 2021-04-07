@@ -55,4 +55,5 @@
 (package-install 'dockerfile-mode)
 (package-install 'outline-minor-faces)
 (package-install 'undo-tree)
+(package-install 'clojure-mode)
 

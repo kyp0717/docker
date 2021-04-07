@@ -23,7 +23,7 @@
 
 ;;;; expand region
 (require 'expand-region)
-(global-set-key (kbd "<f12>") 'er/expand-region)
+(global-set-key (kbd "s-=") 'er/expand-region)
 ;;;; font size
 (global-set-key (kbd "C-=") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -144,7 +144,8 @@
    (setq evil-collection-outline-enable-in-minor-mode-p t)
    (setq outline-blank-line t)
    :config
-   (evil-collection-init 'outline)
+   ;; (evil-collection-init 'outline)
+   (evil-collection-init)
    )
 
 (evil-collection-define-key 'normal 'outline-mode-map
@@ -323,7 +324,6 @@
   "[\]}\)\"]"
   "If this regexp matches the text after the cursor, do an \"electric\"
   return.")
-
 (defun electrify-return-if-match (arg)
   "If the text after the cursor matches `electrify-return-match' then
   open and indent an empty line between the cursor and the text.  Move the
@@ -339,8 +339,10 @@
 ;; (global-set-key (kbd "RET") 'electrify-return-if-match)
 
 ;; (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+
 (add-hook 'emacs-lisp-mode-hook #'lispyville-mode)
 (add-hook 'lisp-mode-hook #'lispyville-mode)
+(add-hook 'clojure-mode-hook #'lispyville-mode)
 
 
 
