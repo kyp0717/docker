@@ -51,6 +51,11 @@
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
 (setq inhibit-startup-screen t)  
+(setq make-backup-files nil) ; stop creating ~ files
+(setq warning-minimum-level :error)
+
+
+;;;; line effects
 
 (global-hl-line-mode t) ;; This highlights the current line in the buffer
 
