@@ -65,6 +65,8 @@
   (beacon-mode 1))
 ; (global-hl-mode +1)
 
+;;;; ibuffer
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;;; Outline Mode
 ;; (use-package bicycle
@@ -359,10 +361,27 @@
      (additional-movement normal visual motion))))
 
 
+;;; Embark
+
+(require 'marginalia)
+(marginalia-mode)
+
+(advice-add #'marginalia-cycle :after
+	    (lambda () (when (bound-and-true-p selectru-mode)
+			     (selectrum-exhibit 'keep-selected))))
+
+(require 'embark)
+(bind-key "C-S-a" embark-act)
+
+(require 'embark-consult)
+(add-hook 'embark-collect-mode 'embark-consult-preview-minor-mode)
+
+
+
 ;;; Test space
 ;; (defun test ()
 ;;   (progn)
-;;   :message "hello")
+;;   :message "hello"
   
 
 
