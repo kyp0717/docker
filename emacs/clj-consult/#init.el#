@@ -18,9 +18,6 @@
 ;;   (load bootstrap-file nil 'nomessage))
 
 ;; Bootstrap `use-package'
-(unless (package-installed-p 'use-package)  ; Unless it is already installed
-  (package-refresh-contents)                ; Update packages archive
-  (package-install 'use-package))           ; Install latest use-package
 (require 'use-package)
 
 ;; (org-babel-load-file (expand-file-name "~/.emacs.d/settings.org"))
