@@ -20,13 +20,12 @@
 ;;   (spaceline-helm-mode 1)
 ;;   (spaceline-emacs-theme))
 
-
 ;;;; expand region
 (require 'expand-region)
 (global-set-key (kbd "s-=") 'er/expand-region)
 ;;;; font size
 (global-set-key (kbd "C-=") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "M-=") 'text-scale-decrease)
             
 ;;;; line num
 (require 'display-line-numbers)
@@ -45,28 +44,25 @@
 
 (global-display-line-numbers-mode)
 
-
 ;;;; start up msg repress
-
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
 (setq inhibit-startup-screen t)  
 (setq make-backup-files nil) ; stop creating ~ files
 (setq warning-minimum-level :error)
 
-
 ;;;; line effects
-
 (global-hl-line-mode t) ;; This highlights the current line in the buffer
-
 (use-package beacon ;; This applies a beacon effect to the highlighted line
   :ensure t
   :config
   (beacon-mode 1))
 ; (global-hl-mode +1)
-
 ;;;; ibuffer
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+;;;; projectile 
+(require 'projectile)
+(projectile-mode +1)
 
 ;;; Outline Mode
 ;; (use-package bicycle
@@ -87,6 +83,7 @@
                     'outline-minor-faces-add-font-lock-keywords))
 
 ;;; Evil Mode
+;;;; evil main deprecated
 ;; (use-package evil 
 ;;   :init
 ;;   (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
@@ -108,26 +105,15 @@
 
 (evil-mode 1)
 
-;; (setq evil-emacs-state-cursor '("red" box)
-;;       evil-normal-state-cursor '("green" box)
-;;       evil-visual-state-cursor '("orange" box)
-;;       evil-insert-state-cursor '("yellow" bar)
-;;       evil-replace-state-cursor '("red" bar)
-;;       evil-operator-state-cursor '("red" hollow)
-;;       evil-cross-lines t)
-;;(setq evil-collection-outline-bind-tab-p t)
-;;(setq evil-collection-outline-enable-in-minor-mode-p t)
-;;(setq outline-blank-line t)
-;; (setq evil-collection-mode-list nil)
-;; (push 'ky-outline evil-collection-mode-list)
-;; (when (require 'evil-collection nil t)
-;;    (evil-collection-init 'outline))
-
-;;(with-eval-after-load 'outline (evil-collection-outline-setup))
-
-(defun ky/outline-hide-all ()
-  (local-set-key (kbd "C-TAB") 'outline-hide-sublevel))
-
+(setq evil-emacs-state-cursor '("red" box)
+      evil-normal-state-cursor '("green" box)
+      evil-visual-state-cursor '("orange" box)
+      evil-insert-state-cursor '("yellow" bar)
+      evil-replace-state-cursor '("red" bar)
+      evil-operator-state-cursor '("red" hollow)
+      evil-cross-lines t)
+(define-key evil-normal-state-map "=" 'er/expand-region)
+(define-key evil-normal-state-map (kbd "C-r") 'undo-redo)
 
 ;;
 ;; (add-hook 'outline-minor-mode-hook #'ky/outline-hide-all)
@@ -139,8 +125,23 @@
 ;;(global-set-key [C-tab] 'outline-hide-sublevels)
 
 
-
 ;;;; evil collection
+
+;;(with-eval-after-load 'outline (evil-collection-outline-setup))
+
+;; (defun ky/outline-hide-all ()
+;;   (local-set-key (kbd "C-TAB") 'outline-hide-sublevel))
+
+
+;; (setq evil-collection-outline-bind-tab-p t)
+;; (setq evil-collection-outline-enable-in-minor-mode-p t)
+;; (setq outline-blank-line t)
+;; (setq evil-collection-mode-list nil)
+;; (push 'ky-outline evil-collection-mode-list)
+;; (when (require 'evil-collection nil t)
+;;    (evil-collection-init 'outline))
+
+
 (use-package evil-collection
 ;;   :bind (:map outline-minor-mode-map
 ;; 	    ([C-tab] . outline-hide-sublevels))
@@ -177,7 +178,6 @@
 
 ;; (eval-after-load 'outline
 ;;     (define-key evil-normal-state-map [C-tab] 'outline-hide-sublevels))
-
 
 
 
@@ -318,7 +318,8 @@
   ;; (setq consult-project-root-function
   ;;       (lambda () (locate-dominating-file "." ".git")))
 )
-;;; Paredit
+
+;;; Lispy / Paredit
 ;; (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
 ;; (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
 ;; (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
@@ -347,6 +348,14 @@
 
 ;; (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
 
+;; hook lispyville to lispy (require lispy to run first)
+;; (add-hook 'lispy-mode-hook #'lispyville-mode)
+;; (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+;; (add-hook 'lisp-mode-hook (lambda () (lispy-mode 1)))
+;; (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
+
+
+;; running lispyville without lispy
 (add-hook 'emacs-lisp-mode-hook #'lispyville-mode)
 (add-hook 'lisp-mode-hook #'lispyville-mode)
 (add-hook 'clojure-mode-hook #'lispyville-mode)
