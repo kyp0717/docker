@@ -82,6 +82,15 @@
   :config (add-hook 'outline-minor-mode-hook
                     'outline-minor-faces-add-font-lock-keywords))
 
+;;;; outline within dockerfile
+(add-hook 'dockerfile-mode-hook
+  (lambda ()
+    (setq outline-regexp "###\\(#*\\)")))
+;;";;;\\(;* [^]\\|###autoload\\)\\|("
+; note that the "^" is *implicit* at the beginning of the regexp
+
+
+
 ;;; Evil Mode
 ;;;; evil main deprecated
 ;; (use-package evil 
@@ -387,6 +396,17 @@
 
 
 
+;;; Tree
+(add-to-list 'load-path "~/.emacs.d/emacs-tree-sitter/core")
+(add-to-list 'load-path "~/.emacs.d/emacs-tree-sitter/lisp")
+(add-to-list 'load-path "~/.emacs.d/emacs-tree-sitter/langs")
+
+(require 'tree-sitter)
+(require 'tree-sitter-hl)
+(require 'tree-sitter-langs)
+(require 'tree-sitter-debug)
+(require 'tree-sitter-query)
+
 ;;; Test space
 ;; (defun test ()
 ;;   (progn)
@@ -395,3 +415,6 @@
 
 
 
+
+;; (with-current-buffer "Dockerfile"
+;;   (setq outline-regexp "###\\(#*\\)"))

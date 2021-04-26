@@ -1,5 +1,7 @@
+### Base image
 FROM andreacorallo/emacs-nativecomp
 
+### Install dependencies
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
@@ -44,7 +46,7 @@ ENV UNAME="emacs" \
     WORK="/mnt/work" \
     SHELL="/bin/bash"
 
-RUN apt update && apt install -y zsh clang && \
+RUN apt update && apt install -y zsh clang fzf && \
     rm -rf /tmp/* /var/lib/apt/lists/* /root/.cache/*
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
@@ -63,11 +65,9 @@ RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/inst
 RUN mkdir ~/.emacs.d && \
     mkdir ~/.emacs.d/themes  
 
-RUN git clone https://gitlab.com/protesilaos/modus-themes.git ~/.emacs.d/modus-themes  && \
-    git clone --recursive https://github.com/ubolonton/emacs-tree-sitter.git
 RUN curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
-
-
+RUN git clone https://gitlab.com/protesilaos/modus-themes.git ~/.emacs.d/modus-themes  && \
+    git clone --recursive https://github.com/ubolonton/emacs-tree-sitter.git ~/.emacs.d/emacs-tree-sitter  
 
 COPY --chown=emacs:emacs ./install*.el /home/emacs/.emacs.d/
 RUN emacs -l ~/.emacs.d/install_base.el -batch && \	
