@@ -1,5 +1,17 @@
 
 ;;; Geneneral Setting
+
+;;;; Tree-sitter
+(add-to-list 'load-path "/home/emacs/.emacs.d/emacs-tree-sitter/lisp")
+(add-to-list 'load-path "/home/emacs/.emacs.d/emacs-tree-sitter/langs")
+(add-to-list 'load-path "~/.emacs.d/emacs-tree-sitter/core")
+(require 'tree-sitter)
+(require 'tree-sitter-hl)
+(require 'tree-sitter-langs)
+(require 'tree-sitter-debug)
+(require 'tree-sitter-query)
+
+
 ;;;; modus theme
 (add-to-list 'load-path "~/.emacs.d/modus-themes")
 (add-to-list 'load-path "~/.emacs.d/custom")
@@ -171,7 +183,8 @@
     ;; zO: Show recursively for current branch only.
     ;; za: Toggle first level like outline-toggle-children.
     ;; zc: Hide complete subtree.
-    "zc" 'outline-hide-sublevels ; Hide all bodies, Emacs has "C-c C-t".
+    ;; "zc" 'outline-hide-sublevels ; Hide all bodies, Emacs has "C-c C-t".
+    "z]" 'outline-hide-sublevels ; Hide all bodies, Emacs has "C-c C-t".
     ;; zm: Show only root notes.
     ;; zo: Show current node like "za".
     ;; zr: Show everything.
@@ -394,18 +407,6 @@
 (require 'embark-consult)
 (add-hook 'embark-collect-mode 'embark-consult-preview-minor-mode)
 
-
-
-;;; Tree
-(add-to-list 'load-path "~/.emacs.d/emacs-tree-sitter/core")
-(add-to-list 'load-path "~/.emacs.d/emacs-tree-sitter/lisp")
-(add-to-list 'load-path "~/.emacs.d/emacs-tree-sitter/langs")
-
-(require 'tree-sitter)
-(require 'tree-sitter-hl)
-(require 'tree-sitter-langs)
-(require 'tree-sitter-debug)
-(require 'tree-sitter-query)
 
 ;;; Test space
 ;; (defun test ()
