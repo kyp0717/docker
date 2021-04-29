@@ -79,7 +79,6 @@ COPY --chown=emacs:emacs ./init.el /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./config.el /home/emacs/.emacs.d/
 
 ### Install Racket Components for Dev
-# RUN raco pkg install --scope installation drracket
-
 # ENTRYPOINT ["emacs"]
 # CMD ["-nw"]
+RUN raco pkg install --auto beautiful-racket

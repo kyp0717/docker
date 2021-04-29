@@ -17,4 +17,5 @@
 (package-install 'lispyville)
 (package-install 'flycheck)
 (package-install 'rainbow-delimiters)
+(package-install 'racket-mode)
 ;;(package-install 'uniquify)

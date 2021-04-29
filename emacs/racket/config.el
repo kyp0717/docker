@@ -328,6 +328,60 @@
   ;;       (lambda () (locate-dominating-file "." ".git")))
 )
 
+;;; Racket Setup
+;; Provides all the racket support
+;; (use-package racket-mode
+;;              :ensure t)
+(require 'racket-mode)
+(use-package rainbow-delimiters
+             :ensure t
+             :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+;; Make buffer names unique
+;; buffernames that are foo<1>, foo<2> are hard to read. This makes them foo|dir  foo|otherdir
+
+;; (use-package uniquify
+;;              :config (setq uniquify-buffer-name-style 'post-forward))
+
+;; ;; Highlight matching parenthesis
+;; Syntax checking
+;; (use-package flycheck
+;;              :ensure t
+;;              :config
+;;              (global-flycheck-mode))
+
+;; ;; Autocomplete popups
+;; (use-package company
+;;              :ensure t
+;;              :config
+;;              (progn
+;;                (setq company-idle-delay 0.2
+;;                      ;; min prefix of 2 chars
+;;                      company-minimum-prefix-length 2
+;;                      company-selection-wrap-around t
+;;                      company-show-numbers t
+;;                      company-dabbrev-downcase nil
+;;                      company-echo-delay 0
+;;                      company-tooltip-limit 20
+;;                      company-transformers '(company-sort-by-occurrence)
+;;                      company-begin-commands '(self-insert-command)
+;;                      )
+;;                (global-company-mode))
+;;              )
+             
+;; ;; Lots of parenthesis and other delimiter niceties
+;; ;; (use-package paredit
+;; ;;              :ensure t
+;; ;;              :config
+;; ;;              (add-hook 'racket-mode-hook #'enable-paredit-mode))
+
+;; ;; Colorizes delimiters so they can be told apart
+
+(show-paren-mode 1)
+(setq show-paren-delay 0)
+
+;; Allows moving through wrapped lines as they appear
+(setq line-move-visual t) 
+
 ;;; Lispy / Paredit
 ;; (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
 ;; (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
@@ -396,61 +450,54 @@
 
 
 
-;;; Test space
-;; (defun test ()
-;;   (progn)
-;;   :message "hello"
-  
-
-
-
-
 ;;; Racket Setup
 ;; Provides all the racket support
-(use-package racket-mode
-             :ensure t)
-
-;; Syntax checking
-(use-package flycheck
-             :ensure t
-             :config
-             (global-flycheck-mode))
-
-;; Autocomplete popups
-(use-package company
-             :ensure t
-             :config
-             (progn
-               (setq company-idle-delay 0.2
-                     ;; min prefix of 2 chars
-                     company-minimum-prefix-length 2
-                     company-selection-wrap-around t
-                     company-show-numbers t
-                     company-dabbrev-downcase nil
-                     company-echo-delay 0
-                     company-tooltip-limit 20
-                     company-transformers '(company-sort-by-occurrence)
-                     company-begin-commands '(self-insert-command)
-                     )
-               (global-company-mode))
-             )
-             
-;; Lots of parenthesis and other delimiter niceties
-;; (use-package paredit
-;;              :ensure t
-;;              :config
-;;              (add-hook 'racket-mode-hook #'enable-paredit-mode))
-
-;; Colorizes delimiters so they can be told apart
+;; (use-package racket-mode
+;;              :ensure t)
+(require 'racket-mode)
 (use-package rainbow-delimiters
              :ensure t
              :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 ;; Make buffer names unique
 ;; buffernames that are foo<1>, foo<2> are hard to read. This makes them foo|dir  foo|otherdir
-(use-package uniquify
-             :config (setq uniquify-buffer-name-style 'post-forward))
 
-;; Highlight matching parenthesis
+;; (use-package uniquify
+;;              :config (setq uniquify-buffer-name-style 'post-forward))
+
+;; ;; Highlight matching parenthesis
+;; Syntax checking
+;; (use-package flycheck
+;;              :ensure t
+;;              :config
+;;              (global-flycheck-mode))
+
+;; ;; Autocomplete popups
+;; (use-package company
+;;              :ensure t
+;;              :config
+;;              (progn
+;;                (setq company-idle-delay 0.2
+;;                      ;; min prefix of 2 chars
+;;                      company-minimum-prefix-length 2
+;;                      company-selection-wrap-around t
+;;                      company-show-numbers t
+;;                      company-dabbrev-downcase nil
+;;                      company-echo-delay 0
+;;                      company-tooltip-limit 20
+;;                      company-transformers '(company-sort-by-occurrence)
+;;                      company-begin-commands '(self-insert-command)
+;;                      )
+;;                (global-company-mode))
+;;              )
+             
+;; ;; Lots of parenthesis and other delimiter niceties
+;; ;; (use-package paredit
+;; ;;              :ensure t
+;; ;;              :config
+;; ;;              (add-hook 'racket-mode-hook #'enable-paredit-mode))
+
+;; ;; Colorizes delimiters so they can be told apart
+
 (show-paren-mode 1)
 (setq show-paren-delay 0)
 
