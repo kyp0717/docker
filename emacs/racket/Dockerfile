@@ -81,4 +81,4 @@ COPY --chown=emacs:emacs ./config.el /home/emacs/.emacs.d/
 ### Install Racket Components for Dev
 # ENTRYPOINT ["emacs"]
 # CMD ["-nw"]
-RUN raco pkg install --auto beautiful-racket
+# RUN raco pkg install --auto beautiful-racket

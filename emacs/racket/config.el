@@ -409,19 +409,17 @@
 ;; Using local-set-key in a mode-hook is a better idea.
 ;; (global-set-key (kbd "RET") 'electrify-return-if-match)
 
-;; (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+(add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+(add-hook 'racket-mode-hook (lambda () (lispy-mode 1)))
+(add-hook 'lispy-mode-hook #'lispyville-mode)
 
-;; hook lispyville to lispy (require lispy to run first)
-;; (add-hook 'lispy-mode-hook #'lispyville-mode)
-;; (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-;; (add-hook 'lisp-mode-hook (lambda () (lispy-mode 1)))
-;; (add-hook 'clojure-mode-hook (lambda () (lispy-mode 1)))
 
 
 ;; running lispyville without lispy
-(add-hook 'emacs-lisp-mode-hook #'lispyville-mode)
-(add-hook 'lisp-mode-hook #'lispyville-mode)
-(add-hook 'clojure-mode-hook #'lispyville-mode)
+;; (add-hook 'emacs-lisp-mode-hook #'lispyville-mode)
+;; (add-hook 'lisp-mode-hook #'lispyville-mode)
+;; (add-hook 'clojure-mode-hook #'lispyville-mode)
+;; (add-hook 'racket-mode-hook #'lispyville-mode)
 
 
 
