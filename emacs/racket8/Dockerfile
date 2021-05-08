@@ -59,6 +59,14 @@ RUN raco pkg config --set catalogs \
     "https://pkgs.racket-lang.org" \
     "https://planet-compats.racket-lang.org"
 
+# RUN raco pkg install \ 
+#    srfi-lite-lib \
+#    zo-lib \
+#    draw-x86_64-linux-natipkg-3 \
+#    draw-x11-x86_64-linux-natipkg \
+#    draw-ttf-x86_64-linux-natipkg
+
+RUN echo "a" | raco pkg install --scope installation drracket
 
 ### Env Var and Create Emacs User
 # Fix "Couldn't register with accessibility bus" error message
@@ -95,4 +103,4 @@ RUN emacs -l ~/.emacs.d/install_base2.el -batch
 COPY --chown=emacs:emacs ./init.el /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./config.el /home/emacs/.emacs.d/
 
-#RUN raco pkg install --scope installation drracket
+RUN echo "a" | raco pkg install http-easy
