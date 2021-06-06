@@ -103,4 +103,4 @@ RUN emacs -l ~/.emacs.d/install_base2.el -batch
 COPY --chown=emacs:emacs ./init.el /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./config.el /home/emacs/.emacs.d/
 
-RUN echo "a" | raco pkg install http-easy
+RUN echo "a" | raco pkg install http-easy yaml rfc6455
