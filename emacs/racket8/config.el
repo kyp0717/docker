@@ -1,6 +1,5 @@
 
 ;;; Geneneral Setting
-
 ;;;; modus theme
 (add-to-list 'load-path "~/.emacs.d/modus-themes")
 (add-to-list 'load-path "~/.emacs.d/custom")
@@ -20,7 +19,6 @@
 ;;   :config
 ;;   (spaceline-helm-mode 1)
 ;;   (spaceline-emacs-theme))
-
 ;;;; expand region
 (require 'expand-region)
 (global-set-key (kbd "s-=") 'er/expand-region)
@@ -44,14 +42,12 @@
       (display-line-numbers-mode)))
 
 (global-display-line-numbers-mode)
-
 ;;;; start up msg repress
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
 (setq inhibit-startup-screen t)  
 (setq make-backup-files nil) ; stop creating ~ files
 (setq warning-minimum-level :error)
-
 ;;;; line effects
 (global-hl-line-mode t) ;; This highlights the current line in the buffer
 (use-package beacon ;; This applies a beacon effect to the highlighted line
@@ -64,6 +60,17 @@
 ;;;; projectile 
 (require 'projectile)
 (projectile-mode +1)
+;;;; move buffer to frame
+(defun ky-switch-current-window-into-frame ()
+  (interactive)
+  (let ((buffer (current-buffer)))
+    (unless (one-window-p)
+      (delete-window))
+    (display-buffer-pop-up-frame buffer nil)))
+;;;; pretty symbol mode
+;; display “lambda” as “λ”
+(global-prettify-symbols-mode 1)
+(setq prettify-symbols-alist '(("lambda" . 955)))
 
 ;;; Outline Mode
 ;; (use-package bicycle
@@ -82,7 +89,6 @@
   :after outline
   :config (add-hook 'outline-minor-mode-hook
                     'outline-minor-faces-add-font-lock-keywords))
-
 ;;;; outline within dockerfile
 (add-hook 'dockerfile-mode-hook
   (lambda ()
@@ -368,11 +374,11 @@
 ;;                (global-company-mode))
 ;;              )
              
-;; ;; Lots of parenthesis and other delimiter niceties
-;; ;; (use-package paredit
-;; ;;              :ensure t
-;; ;;              :config
-;; ;;              (add-hook 'racket-mode-hook #'enable-paredit-mode))
+;; Lots of parenthesis and other delimiter niceties
+;; (use-package paredit
+;;              :ensure t
+;;              :config
+;;              (add-hook 'racket-mode-hook #'enable-paredit-mode))
 
 ;; ;; Colorizes delimiters so they can be told apart
 
@@ -380,7 +386,10 @@
 (setq show-paren-delay 0)
 
 ;; Allows moving through wrapped lines as they appear
-(setq line-move-visual t) 
+(setq line-move-visual t)
+
+(add-hook 'racket-mode-hook #'racket-unicode-input-method-enable)
+(add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
 
 ;;; Lispy / Paredit
 ;; (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
@@ -448,56 +457,3 @@
 
 
 
-;;; Racket Setup
-;; Provides all the racket support
-;; (use-package racket-mode
-;;              :ensure t)
-(require 'racket-mode)
-(use-package rainbow-delimiters
-             :ensure t
-             :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
-;; Make buffer names unique
-;; buffernames that are foo<1>, foo<2> are hard to read. This makes them foo|dir  foo|otherdir
-
-;; (use-package uniquify
-;;              :config (setq uniquify-buffer-name-style 'post-forward))
-
-;; ;; Highlight matching parenthesis
-;; Syntax checking
-;; (use-package flycheck
-;;              :ensure t
-;;              :config
-;;              (global-flycheck-mode))
-
-;; ;; Autocomplete popups
-;; (use-package company
-;;              :ensure t
-;;              :config
-;;              (progn
-;;                (setq company-idle-delay 0.2
-;;                      ;; min prefix of 2 chars
-;;                      company-minimum-prefix-length 2
-;;                      company-selection-wrap-around t
-;;                      company-show-numbers t
-;;                      company-dabbrev-downcase nil
-;;                      company-echo-delay 0
-;;                      company-tooltip-limit 20
-;;                      company-transformers '(company-sort-by-occurrence)
-;;                      company-begin-commands '(self-insert-command)
-;;                      )
-;;                (global-company-mode))
-;;              )
-             
-;; ;; Lots of parenthesis and other delimiter niceties
-;; ;; (use-package paredit
-;; ;;              :ensure t
-;; ;;              :config
-;; ;;              (add-hook 'racket-mode-hook #'enable-paredit-mode))
-
-;; ;; Colorizes delimiters so they can be told apart
-
-(show-paren-mode 1)
-(setq show-paren-delay 0)
-
-;; Allows moving through wrapped lines as they appear
-(setq line-move-visual t) 
