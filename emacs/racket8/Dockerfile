@@ -35,9 +35,9 @@ RUN apt-get update && \
     default-jre \
     zsh \
     wget \
+    tmux \
     && rm -rf /var/lib/apt/lists/* /tmp/* /root/.cache/*
 
-RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 ### Install Racket
 ENV RACKET_INSTALLER_URL="https://mirror.racket-lang.org/installers/8.1/racket-minimal-8.1-x86_64-linux-natipkg-cs.sh"
@@ -104,3 +104,8 @@ COPY --chown=emacs:emacs ./init.el /home/emacs/.emacs.d/
 COPY --chown=emacs:emacs ./config.el /home/emacs/.emacs.d/
 
 RUN echo "a" | raco pkg install http-easy yaml rfc6455
+<<<<<<< HEAD
+=======
+RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+>>>>>>> 3df121778c0a426e557284254c3856969e02f737
