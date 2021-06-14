@@ -108,5 +108,10 @@ RUN sed -i "s|robbyrussell|bira|g" ~/.zshrc
 RUN git clone https://github.com/gpakosz/.tmux.git && \
     ln -s -f .tmux/.tmux.conf && \
     cp .tmux/.tmux.conf.local .
+RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && \
+    ~/.fzf/install
+
+
+
 
 RUN echo "a" | raco pkg install http-easy yaml rfc6455 web-server
