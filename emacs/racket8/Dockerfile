@@ -111,7 +111,6 @@ RUN git clone https://github.com/gpakosz/.tmux.git && \
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && \
     ~/.fzf/install
 
-
-
-
+COPY --chown=phage:phage ./.zsh_history /home/phage/
+RUN  echo 'alias xclip="xclip -selection c"' >> ~/.zshrc
 RUN echo "a" | raco pkg install http-easy yaml rfc6455 web-server
