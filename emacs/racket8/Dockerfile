@@ -103,6 +103,7 @@ RUN emacs -l ~/.emacs.d/install_base2.el -batch
 COPY --chown=phage:phage ./init.el /home/phage/.emacs.d/
 COPY --chown=phage:phage ./config.el /home/phage/.emacs.d/
 
+### Install tools
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 RUN sed -i "s|robbyrussell|bira|g" ~/.zshrc
 RUN git clone https://github.com/gpakosz/.tmux.git && \
@@ -112,5 +113,17 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && \
     ~/.fzf/install
 
 COPY --chown=phage:phage ./.zsh_history /home/phage/
-RUN  echo 'alias xclip="xclip -selection c"' >> ~/.zshrc
+RUN echo 'alias xclip="xclip -selection c"' >> ~/.zshrc
+RUN echo 'set -g default-command $SHELL' >> ~/.tmux.conf.local
+
+### Install racket packages
 RUN echo "a" | raco pkg install http-easy yaml rfc6455 web-server
+
+
+
+
+
+
+### Start Up
+ENTRYPOINT ["tmux", "-u"]
+
