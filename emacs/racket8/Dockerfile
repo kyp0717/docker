@@ -117,12 +117,7 @@ RUN echo 'alias xclip="xclip -selection c"' >> ~/.zshrc
 RUN echo 'set -g default-command $SHELL' >> ~/.tmux.conf.local
 
 ### Install racket packages
-RUN echo "a" | raco pkg install http-easy yaml rfc6455 web-server
-
-
-
-
-
+RUN echo "a" | raco pkg install http-easy yaml rfc6455 web-server request
 
 ### Start Up
 ENTRYPOINT ["tmux", "-u"]

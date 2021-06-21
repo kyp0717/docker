@@ -71,6 +71,9 @@
 ;; display “lambda” as “λ”
 (global-prettify-symbols-mode 1)
 (setq prettify-symbols-alist '(("lambda" . 955)))
+;;;; enable drag and drop
+(setq mouse-drag-and-drop-region t)
+(setq mouse-drag-and-drop-region-cut-when-buffers-differ t)
 
 ;;; Outline Mode
 ;; (use-package bicycle
