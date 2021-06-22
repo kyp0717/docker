@@ -141,8 +141,6 @@
 ;; (eval-after-load 'evil
 ;; (define-key outline-mode-map [C-tab] 'outline-hide-sublevels))
 ;;(global-set-key [C-tab] 'outline-hide-sublevels)
-
-
 ;;;; evil collection
 
 ;;(with-eval-after-load 'outline (evil-collection-outline-setup))
@@ -197,17 +195,10 @@
 ;; (eval-after-load 'outline
 ;;     (define-key evil-normal-state-map [C-tab] 'outline-hide-sublevels))
 
-
-
-
-
 ;;;; comments
 (require 'evil-commentary)
 (evil-commentary-mode)
 ;; (evil-collection-init)
-
-
-
 
 ;;; Auto complete
 ;; enable globally    
@@ -337,6 +328,7 @@
   ;;       (lambda () (locate-dominating-file "." ".git")))
 )
 
+
 ;;; Racket Setup
 ;; Provides all the racket support
 ;; (use-package racket-mode
@@ -345,7 +337,7 @@
 (use-package rainbow-delimiters
              :ensure t
              :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
-;; Make buffer names unique
+;;;; Make buffer names unique
 ;; buffernames that are foo<1>, foo<2> are hard to read. This makes them foo|dir  foo|otherdir
 
 ;; (use-package uniquify
@@ -357,8 +349,7 @@
 ;;              :ensure t
 ;;              :config
 ;;              (global-flycheck-mode))
-
-;; ;; Autocomplete popups
+;;;; Autocomplete popups
 ;; (use-package company
 ;;              :ensure t
 ;;              :config
@@ -384,7 +375,7 @@
 ;;              (add-hook 'racket-mode-hook #'enable-paredit-mode))
 
 ;; ;; Colorizes delimiters so they can be told apart
-
+;;;; misc
 (show-paren-mode 1)
 (setq show-paren-delay 0)
 
@@ -393,6 +384,7 @@
 
 (add-hook 'racket-mode-hook #'racket-unicode-input-method-enable)
 (add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
+(define-key racket-mode-map (kbd "C-S") 'racket-send-definition)
 
 ;;; Lispy / Paredit
 ;; (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
