@@ -203,6 +203,7 @@
 ;;; Auto complete
 ;; enable globally    
 (add-hook 'after-init-hook 'global-company-mode)
+(global-set-key (kbd "<C-tab>") 'company-complete)
 
 (setq company-idle-delay 0)
 (setq company-dabbrev-downcase 0)
@@ -218,7 +219,7 @@
 	  (indent-for-tab-command)))))
 
 ;; backtab is equivalent to Shift+Tab
-(global-set-key [backtab] 'tab-indent-or-complete)
+;; (global-set-key [backtab] 'tab-indent-or-complete)
 
 ;;; Orderless
 (use-package orderless
@@ -388,7 +389,7 @@
 (add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
 (define-key racket-mode-map (kbd "S-<return>") 'racket-send-definition)
 (define-key racket-mode-map (kbd "C-S-<return>") 'racket-send-region)
-(define-key racket-mode-map (kbd "C-|") 'racket-insert-lambda)
+(define-key racket-mode-map (kbd "C-\\") 'racket-insert-lambda)
 
 
 ;;; Lispy / Paredit
