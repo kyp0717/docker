@@ -100,9 +100,6 @@ COPY --chown=phage:phage ./install*.el /home/phage/.emacs.d/
 RUN emacs -l ~/.emacs.d/install_base.el -batch 
 RUN emacs -l ~/.emacs.d/install_base2.el -batch 
 
-COPY --chown=phage:phage ./init.el /home/phage/.emacs.d/
-COPY --chown=phage:phage ./config.el /home/phage/.emacs.d/
-
 ### Install tools
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 RUN sed -i "s|robbyrussell|bira|g" ~/.zshrc
@@ -120,5 +117,7 @@ RUN echo 'set -g default-command $SHELL' >> ~/.tmux.conf.local
 RUN echo "a" | raco pkg install http-easy yaml rfc6455 web-server request
 
 ### Start Up
+COPY --chown=phage:phage ./init.el /home/phage/.emacs.d/
+COPY --chown=phage:phage ./config.el /home/phage/.emacs.d/
 ENTRYPOINT ["tmux", "-u"]
 
