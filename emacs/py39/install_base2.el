@@ -10,12 +10,12 @@
 (package-initialize)
 (package-refresh-contents)
 
+(package-install 'exec-path-from-shell)
+(package-install 'elpy )
+(package-install 'pyenv-mode )
+(package-install 'ein)  ;; integrate Ipython notebook instead of python repl
+(package-install 'blacken) ;; blck formatting on save
+(package-install 'py-autopep8) ;; run autopep8 on save
+(package-install 'flycheck) ;; on the fly syntax checking
 
 ;; Download Evil
-; (unless (package-installed-p 'evil)
-(package-install 'lispy )
-(package-install 'lispyville)
-(package-install 'flycheck)
-(package-install 'rainbow-delimiters)
-(package-install 'racket-mode)
-;;(package-install 'uniquify)

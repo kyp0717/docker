@@ -1,4 +1,3 @@
-
 ;;; Geneneral Setting
 ;;;; modus theme
 (add-to-list 'load-path "~/.emacs.d/modus-themes")
@@ -74,6 +73,12 @@
 ;;;; enable drag and drop
 (setq mouse-drag-and-drop-region t)
 (setq mouse-drag-and-drop-region-cut-when-buffers-differ t)
+;;;; Use shell's $PATH
+(exec-path-from-shell-copy-env "PATH")
+;;;; format line number spacing
+(setq linum-format "%4d \u2502 ")
+;;;; Allow hash to be entered  
+(global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#")))
 
 ;;; Outline Mode
 ;; (use-package bicycle
@@ -329,112 +334,6 @@
 )
 
 
-;;; Racket Setup
-;; Provides all the racket support
-;; (use-package racket-mode
-;;              :ensure t)
-(require 'racket-mode)
-(use-package rainbow-delimiters
-             :ensure t
-             :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
-;;;; Make buffer names unique
-;; buffernames that are foo<1>, foo<2> are hard to read. This makes them foo|dir  foo|otherdir
-
-;; (use-package uniquify
-;;              :config (setq uniquify-buffer-name-style 'post-forward))
-
-;; ;; Highlight matching parenthesis
-;; Syntax checking
-;; (use-package flycheck
-;;              :ensure t
-;;              :config
-;;              (global-flycheck-mode))
-;;;; Autocomplete popups
-;; (use-package company
-;;              :ensure t
-;;              :config
-;;              (progn
-;;                (setq company-idle-delay 0.2
-;;                      ;; min prefix of 2 chars
-;;                      company-minimum-prefix-length 2
-;;                      company-selection-wrap-around t
-;;                      company-show-numbers t
-;;                      company-dabbrev-downcase nil
-;;                      company-echo-delay 0
-;;                      company-tooltip-limit 20
-;;                      company-transformers '(company-sort-by-occurrence)
-;;                      company-begin-commands '(self-insert-command)
-;;                      )
-;;                (global-company-mode))
-;;              )
-             
-;; Lots of parenthesis and other delimiter niceties
-;; (use-package paredit
-;;              :ensure t
-;;              :config
-;;              (add-hook 'racket-mode-hook #'enable-paredit-mode))
-
-;; ;; Colorizes delimiters so they can be told apart
-;;;; misc
-(show-paren-mode 1)
-(setq show-paren-delay 0)
-
-;; Allows moving through wrapped lines as they appear
-(setq line-move-visual t)
-
-(add-hook 'racket-mode-hook #'racket-unicode-input-method-enable)
-(add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
-(define-key racket-mode-map (kbd "C-S") 'racket-send-definition)
-
-;;; Lispy / Paredit
-;; (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-;; (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-;; (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-;; (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-;; (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-;; (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-;; (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-
-(defvar electrify-return-match
-  "[\]}\)\"]"
-  "If this regexp matches the text after the cursor, do an \"electric\"
-  return.")
-(defun electrify-return-if-match (arg)
-  "If the text after the cursor matches `electrify-return-match' then
-  open and indent an empty line between the cursor and the text.  Move the
-  cursor to the new line."
-  (interactive "P")
-  (let ((case-fold-search nil))
-    (if (looking-at electrify-return-match)
-	(save-excursion (newline-and-indent)))
-    (newline arg)
-    (indent-according-to-mode)))
-
-;; Using local-set-key in a mode-hook is a better idea.
-;; (global-set-key (kbd "RET") 'electrify-return-if-match)
-
-(add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-(add-hook 'racket-mode-hook (lambda () (lispy-mode 1)))
-(add-hook 'lispy-mode-hook #'lispyville-mode)
-
-
-
-;; running lispyville without lispy
-;; (add-hook 'emacs-lisp-mode-hook #'lispyville-mode)
-;; (add-hook 'lisp-mode-hook #'lispyville-mode)
-;; (add-hook 'clojure-mode-hook #'lispyville-mode)
-;; (add-hook 'racket-mode-hook #'lispyville-mode)
-
-
-
-(with-eval-after-load 'lispyville
-  (lispyville-set-key-theme
-   '(operators
-     c-w
-     (escape insert)
-     (additional-movement normal visual motion))))
-
-
 ;;; Embark
 
 (require 'marginalia)
@@ -452,3 +351,32 @@
 
 
 
+
+;;; Python
+;; ein config
+(elpy-enable)
+(pyenv-mode)
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i --simple-prompt")
+
+;; Enable Flycheck
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+;; Enable autopep8
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+
+
+;; Use IPython for REPL
+(setq python-shell-interpreter "jupyter"
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+
+(add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter")
+
+
+;; emacs-jupyter version (NOT ein)
+;; (add-to-list 'load-path "~/path/to/jupyter")
+;; (require 'jupyter)
