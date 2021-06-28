@@ -385,11 +385,11 @@
 
 
 (when (executable-find "ipython3")
-  (setq python-shell-interpreter "ipython3"))
+  (setq python-shell-interpreter "ipython"))
 ;; (setq python-shell-interpreter-args "-i --simple-prompt")
 (defun ipython ()
     (interactive)
-    (term "/home/phage/.local/bin/ipython3"))
+    (term "/home/phage/.local/bin/ipython"))
 
 ;;;; fancy setup - not working
 ;; dev config
