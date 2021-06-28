@@ -74,10 +74,11 @@
 (setq mouse-drag-and-drop-region-cut-when-buffers-differ t)
 ;;;; Use shell's $PATH
 ;; (exec-path-from-shell-copy-env "PATH")
-
 ;;;; Allow hash to be entered  
 (global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#")))
-
+;;;; remap kill buffer and window
+(global-set-key (kbd "C-k") 'kill-buffer-and-window)
+            
 ;;; Outline Mode
 ;; (use-package bicycle
 ;;   :after outline
@@ -355,6 +356,9 @@
             (conda-env-autoactivate-mode t)
             (setq conda-env-home-directory (expand-file-name "~/.conda/"))
             (custom-set-variables '(conda-anaconda-home "/opt/conda/"))))
+;;; default python repl
+(setq python-shell-interpreter "ipython")
+
 
 ;;; Python jupyter
 (use-package jupyter

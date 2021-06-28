@@ -56,7 +56,8 @@ ENV UNAME="phage" \
     GID="1000" \
     WORK="/mnt/work" \
     SHELL="/bin/bash"
-
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+ENV PATH /opt/conda/bin:$PATH
     ### Create Emacs User and Group
 COPY emacs_user.sh /tmp/
 
@@ -64,24 +65,27 @@ COPY emacs_user.sh /tmp/
 RUN chown root /tmp/emacs_user.sh && \
     chmod 700  /tmp/emacs_user.sh && \
     /tmp/emacs_user.sh
-RUN adduser phage sudo
+#RUN adduser phage sudo
 
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> \
-    /etc/sudoers
+#RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> \
+#    /etc/sudoers
 
-RUN sudo apt-get update 
+RUN apt-get update --fix-missing && \
+    apt-get install -y wget bzip2 ca-certificates curl git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh && \
+    /opt/conda/bin/conda clean -tipsy && \
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate base" >> ~/.bashrc
+
+RUN conda update -n base -c defaults conda
 USER phage
 WORKDIR /home/phage
-
-### install py39
-RUN sudo apt update && sudo apt upgrade 
-RUN sudo apt install -y wget build-essential libreadline-gplv2-dev libncursesw5-dev libgccjit-7-dev \
-     libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev 
-RUN wget https://www.python.org/ftp/python/3.9.4/Python-3.9.4.tgz  && \
-    tar xzf Python-3.9.4.tgz 
-RUN cd Python-3.9.4 && ./configure --enable-optimizations && sudo make altinstall
-RUN sudo rm -rf ~/Python-3.9.4
 
 ### Configure Emacs
 RUN mkdir ~/.emacs.d && \
@@ -90,40 +94,43 @@ RUN mkdir ~/.emacs.d && \
 
 RUN git clone https://github.com/emacsmirror/modus-themes.git ~/.emacs.d/modus-themes
 
-### Install tools
-RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-RUN sed -i "s|robbyrussell|bira|g" ~/.zshrc
-RUN git clone https://github.com/gpakosz/.tmux.git && \
-    ln -s -f .tmux/.tmux.conf && \
-    cp .tmux/.tmux.conf.local .
+### install fzf
 RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && \
     ~/.fzf/install
 
+
+### Install tools
+RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+RUN git clone https://github.com/gpakosz/.tmux.git && \
+    ln -s -f .tmux/.tmux.conf && \
+    cp .tmux/.tmux.conf.local .
+
+RUN git clone https://github.com/esc/conda-zsh-completion \
+    ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/conda-zsh-completion
+
 COPY --chown=phage:phage ./.zsh_history /home/phage/
 RUN echo 'alias xclip="xclip -selection c"' >> ~/.zshrc
+RUN sed -i "s|robbyrussell|bira|g" ~/.zshrc
 RUN echo 'set -g default-command $SHELL' >> ~/.tmux.conf.local
 
-
-
+RUN conda create -n py38 python=3.8 
+# Make RUN commands use the new environment:
+SHELL ["conda", "run", "-n", "py38", "/bin/bash", "-c"]		
+#RUN conda activate py38 
+RUN conda install jupyter 
+RUN python -m ipykernel install --user --name=py38
+RUN conda install jedi autopep8 flake8  
+RUN pip install  alpaca-trade-api
 ### Start Up
 COPY --chown=phage:phage ./install*.el /home/phage/.emacs.d/
 RUN emacs -l ~/.emacs.d/install_base.el -batch 
-RUN sudo apt-get update 
 RUN emacs -l ~/.emacs.d/install_base2.el -batch 
+RUN conda install  numpy pandas scipy \
+    yaml 
 
 COPY --chown=phage:phage ./init.el /home/phage/.emacs.d/
 COPY --chown=phage:phage ./config.el /home/phage/.emacs.d/
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "py38" ]
 
-### Install python packages
-RUN python3.9 -m pip install --upgrade pip
-RUN pip3.9 install --user jedi autopep8 flake8 ipython importmagic \
-    yapf jupyterlab notebook tornado 
-RUN pip3.9 install --user numpy pandas scipy websockets alpaca-trade-api \
-    yaml json
-
-ENV PATH="/home/phage/.local/bin:${PATH}"
-
-EXPOSE 8888 
-
-ENTRYPOINT ["tmux", "-u"]
 

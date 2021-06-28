@@ -74,10 +74,11 @@
 (setq mouse-drag-and-drop-region-cut-when-buffers-differ t)
 ;;;; Use shell's $PATH
 ;; (exec-path-from-shell-copy-env "PATH")
-
 ;;;; Allow hash to be entered  
 (global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#")))
-
+;;;; remap kill buffer and window
+(global-set-key (kbd "C-k") 'kill-buffer-and-window)
+            
 ;;; Outline Mode
 ;; (use-package bicycle
 ;;   :after outline
@@ -347,70 +348,55 @@
 (require 'embark-consult)
 (add-hook 'embark-collect-mode 'embark-consult-preview-minor-mode)
 
-;;; Python
-;;;; standard setup
-(use-package python
+;;; Python conda
+(use-package conda
+  :config (progn
+            (conda-env-initialize-interactive-shells)
+            (conda-env-initialize-eshell)
+            (conda-env-autoactivate-mode t)
+            (setq conda-env-home-directory (expand-file-name "~/.conda/"))
+            (custom-set-variables '(conda-anaconda-home "/opt/conda/"))))
+;;; default python repl
+(setq python-shell-interpreter "ipython")
+
+
+;;; Python jupyter
+(use-package jupyter
+  :commands (jupyter-run-server-repl
+             jupyter-run-repl
+             jupyter-server-list-kernels)
+  :init (eval-after-load 'jupyter-org-extensions ; conflicts with my helm config, I use <f2 #>
+          '(unbind-key "C-c h" jupyter-org-interaction-mode-map))
+        (add-hook 'jupyter-repl-mode-hook
+            (lambda () (setq-local display-line-numbers nil)))
+  )
+
+;;; Python OB
+(use-package ob
   :ensure nil
-  :mode
-  ("\\.py\\'" . python-mode)
+  :config (progn
+            ;; load more languages for org-babel
+            (org-babel-do-load-languages
+             'org-babel-load-languages
+             '((python . t)
+               (shell . t)
+               (latex . t)
+               (ditaa . t)
+               (C . t)
+               (dot . t)
+               (plantuml . t)
+               (makefile . t)
+               (jupyter . t)))          ; must be last
 
-  :init
-  (setq-default indent-tabs-mode nil)
+            (setq org-babel-default-header-args:sh    '((:results . "output replace"))
+                  org-babel-default-header-args:bash  '((:results . "output replace"))
+                  org-babel-default-header-args:shell '((:results . "output replace"))
+                  org-babel-default-header-args:jupyter-python '((:async . "yes")
+                                                                 (:session . "py")
+                                                                 (:kernel . "sagemath")))
 
-  :hook
-  ((python-mode . smartparens-mode)
-   (python-mode . company-mode)
-   (python-mode . flycheck-mode)
-   (inferior-python-mode . smartparens-mode))
+            (setq org-confirm-babel-evaluate nil
+                  org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar"
+                  org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar")
 
-  :config
-  (setq python-indent-offset 4
-        python-indent-guess-indent-offset-verbose nil
-        python-shell-interpreter "python"
-        ;; python-shell-interpreter-args "-i --simple-prompt"
-        ))
-;; Enable Flycheck
-(when (require 'flycheck nil t)
-  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-  (add-hook 'elpy-mode-hook 'flycheck-mode))
-
-;; Enable autopep8
-(require 'py-autopep8)
-(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
-
-;;;; ipython setup
-(setenv "PATH" (concat "/home/phage/.local/bin:"
-                       (getenv "PATH")))
-(add-to-list 'exec-path "/home/phage/.local/bin")
-
-
-(when (executable-find "ipython3")
-  (setq python-shell-interpreter "ipython"))
-;; (setq python-shell-interpreter-args "-i --simple-prompt")
-(defun ipython ()
-    (interactive)
-    (term "/home/phage/.local/bin/ipython"))
-
-;;;; fancy setup - not working
-;; dev config
-;; (elpy-enable)
-;; (pyenv-mode)
-
-;;;; jupyter setup
-Use IPython for REPL
-;; (setq python-shell-interpreter "jupyter"
-;;       python-shell-interpreter-args "console --simple-prompt"
-;;       python-shell-prompt-detect-failure-warning nil)
-;; (add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter")
-;; (require 'ein)
-;; (require 'ein-notebook)
-;; (require 'ein-subpackages)
-
-;; (setq ein:completion-backend 'ein:use-ac-jedi-backend)
-
-
-
-;;;; emacs-jupyter setup
-;; emacs-jupyter version (NOT ein)
-;; (add-to-list 'load-path "~/path/to/jupyter")
-;; (require 'jupyter)
+            (add-to-list 'org-src-lang-modes (quote ("plantuml" . plantuml)))))

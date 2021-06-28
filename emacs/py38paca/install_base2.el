@@ -11,19 +11,20 @@
 (package-refresh-contents)
 
 (package-install 'exec-path-from-shell)
-(package-install 'elpy )
-(package-install 'pyenv-mode )
-(package-install 'ein)  ;; integrate Ipython notebook instead of python repl
+;;(package-install 'elpy )
+;;(package-install 'pyenv-mode )
+;;(package-install 'ein)  ;; integrate Ipython notebook instead of python repl
 (package-install 'blacken) ;; blck formatting on save
 (package-install 'py-autopep8) ;; run autopep8 on save
 (package-install 'flycheck) ;; on the fly syntax checking
 (package-install 'websocket) 
-(package-install 'request) 
-(package-install 'request-deferred) 
-(package-install 'dash) 
-(package-install 's) 
-(package-install 'skewer-mode) 
+;;(package-install 'request) 
+;;(package-install 'request-deferred) 
+;;(package-install 'dash) 
+;;(package-install 's) 
+;;(package-install 'skewer-mode) 
 (package-install 'jupyter) 
-(package-install 'python) 
+;;(package-install 'python) 
+(package-install 'conda) 
 
 ;; Download Evil
