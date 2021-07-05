@@ -1,4 +1,5 @@
 ;;; Geneneral Setting
+
 ;;;; modus theme
 (add-to-list 'load-path "~/.emacs.d/modus-themes")
 (add-to-list 'load-path "~/.emacs.d/custom")
@@ -79,6 +80,8 @@
 ;;;; remap kill buffer and window
 (global-set-key (kbd "C-k") 'kill-buffer-and-window)
             
+
+
 ;;; Outline Mode
 ;; (use-package bicycle
 ;;   :after outline
@@ -120,13 +123,11 @@
 ;; 	evil-operator-state-cursor '("red" hollow)
 ;; 	evil-cross-lines t)
 ;;   )
-;;;; evil main
+;; Enable hybrid mode (emacs binding in insert state)
+;;;; preset evil variable
+(setq evil-disable-insert-state-bindings t)
 (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
 (setq evil-want-keybinding nil)
-(require 'evil)
-
-(evil-mode 1)
-
 (setq evil-emacs-state-cursor '("red" box)
       evil-normal-state-cursor '("green" box)
       evil-visual-state-cursor '("orange" box)
@@ -134,6 +135,9 @@
       evil-replace-state-cursor '("red" bar)
       evil-operator-state-cursor '("red" hollow)
       evil-cross-lines t)
+;;;; evil main
+(require 'evil)
+(evil-mode 1)
 (define-key evil-normal-state-map "=" 'er/expand-region)
 (define-key evil-normal-state-map (kbd "C-r") 'undo-redo)
 
@@ -147,20 +151,12 @@
 ;;(global-set-key [C-tab] 'outline-hide-sublevels)
 ;;;; evil collection
 
-;;(with-eval-after-load 'outline (evil-collection-outline-setup))
-
-;; (defun ky/outline-hide-all ()
-;;   (local-set-key (kbd "C-TAB") 'outline-hide-sublevel))
-
-
 ;; (setq evil-collection-outline-bind-tab-p t)
 ;; (setq evil-collection-outline-enable-in-minor-mode-p t)
 ;; (setq outline-blank-line t)
 ;; (setq evil-collection-mode-list nil)
-;; (push 'ky-outline evil-collection-mode-list)
 ;; (when (require 'evil-collection nil t)
 ;;    (evil-collection-init 'outline))
-
 
 (use-package evil-collection
 ;;   :bind (:map outline-minor-mode-map
@@ -353,22 +349,46 @@
 ;; Provides all the racket support
 ;; (use-package racket-mode
 ;;              :ensure t)
+
+
+;;;; main racket setup
+;;(show-paren-mode 1)
+(setq show-paren-delay 0)
 (require 'racket-mode)
+
+
 (use-package rainbow-delimiters
              :ensure t
              :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
-;;;; Make buffer names unique
-;; buffernames that are foo<1>, foo<2> are hard to read. This makes them foo|dir  foo|otherdir
 
-;; (use-package uniquify
-;;              :config (setq uniquify-buffer-name-style 'post-forward))
+;; Allows moving through wrapped lines as they appear
+(add-hook 'racket-mode-hook #'racket-unicode-input-method-enable)
+(add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
+(define-key racket-mode-map (kbd "S-<return>") 'racket-send-definition)
+(define-key racket-mode-map (kbd "C-S-<return>") 'racket-send-region)
+(define-key racket-mode-map (kbd "C-\\") 'racket-insert-lambda)
 
-;; ;; Highlight matching parenthesis
-;; Syntax checking
-;; (use-package flycheck
-;;              :ensure t
-;;              :config
-;;              (global-flycheck-mode))
+
+;;;; paredit setup
+(use-package paredit
+  :ensure t
+  :config
+  (dolist (m '(emacs-lisp-mode-hook
+	       racket-mode-hook
+	       racket-repl-mode-hook))
+    (add-hook m #'enable-paredit-mode))
+  (bind-keys :map paredit-mode-map
+	     ("{"   . paredit-open-curly)
+	     ("}"   . paredit-close-curly))
+  (unless terminal-frame
+    (bind-keys :map paredit-mode-map
+	       ("M-[" . paredit-wrap-square)
+	       ("M-{" . paredit-wrap-curly))))
+
+;; (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
+;; (add-hook 'racket-mode-hook #'paredit-mode)
+;; (add-hook 'racket-mode-hook 'evil-paredit-mode)
+
 ;;;; Autocomplete popups
 ;; (use-package company
 ;;              :ensure t
@@ -395,40 +415,43 @@
 ;;              (add-hook 'racket-mode-hook #'enable-paredit-mode))
 
 ;; ;; Colorizes delimiters so they can be told apart
-;;;; misc
-(show-paren-mode 1)
-(setq show-paren-delay 0)
+;;;; Make buffer names unique
+;; buffernames that are foo<1>, foo<2> are hard to read. This makes them foo|dir  foo|otherdir
 
-;; Allows moving through wrapped lines as they appear
-(setq line-move-visual t)
+;; (use-package uniquify
+;;              :config (setq uniquify-buffer-name-style 'post-forward))
 
-(add-hook 'racket-mode-hook #'racket-unicode-input-method-enable)
-(add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
-(define-key racket-mode-map (kbd "S-<return>") 'racket-send-definition)
-(define-key racket-mode-map (kbd "C-S-<return>") 'racket-send-region)
-(define-key racket-mode-map (kbd "C-\\") 'racket-insert-lambda)
-
+;; ;; Highlight matching parenthesis
+;; Syntax checking
+;; (use-package flycheck
+;;              :ensure t
+;;              :config
+;;              (global-flycheck-mode))
 
 ;;; Lispy / Paredit
-(use-package paredit
-  :ensure t
-  :config
-  (dolist (m '(emacs-lisp-mode-hook
-	       racket-mode-hook
-	       racket-repl-mode-hook))
-    (add-hook m #'paredit-mode))
-  (bind-keys :map paredit-mode-map
-	     ("{"   . paredit-open-curly)
-	     ("}"   . paredit-close-curly))
-  (unless terminal-frame
-    (bind-keys :map paredit-mode-map
-	       ("M-[" . paredit-wrap-square)
-	       ("M-{" . paredit-wrap-curly))))
 
-(add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
-(add-hook 'racket-mode-hook 'evil-paredit-mode)
+;;;; setup1 deprecated
 
+;; (use-package paredit
+;;   :ensure t
+;;   :config
+;;   (dolist (m '(emacs-lisp-mode-hook
+;; 	       racket-mode-hook
+;; 	       racket-repl-mode-hook))
+;;     (add-hook m #'paredit-mode))
+;;   (bind-keys :map paredit-mode-map
+;; 	     ("{"   . paredit-open-curly)
+;; 	     ("}"   . paredit-close-curly))
+;;   (unless terminal-frame
+;;     (bind-keys :map paredit-mode-map
+;; 	       ("M-[" . paredit-wrap-square)
+;; 	       ("M-{" . paredit-wrap-curly))))
 
+;; ;; (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
+;; ;; (add-hook 'racket-mode-hook #'paredit-mode)
+;; ;; (add-hook 'racket-mode-hook 'evil-paredit-mode)
+
+;;;; setup2
 ;; (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
 ;; (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
 ;; (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
@@ -436,22 +459,24 @@
 ;; (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
 ;; (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
 ;; (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+;; (add-hook 'racket-mode-hook #'enable-paredit-mode)
 
 ;;;; electrify???
-(defvar electrify-return-match
-  "[\]}\)\"]"
-  "If this regexp matches the text after the cursor, do an \"electric\"
-  return.")
-(defun electrify-return-if-match (arg)
-  "If the text after the cursor matches `electrify-return-match' then
-  open and indent an empty line between the cursor and the text.  Move the
-  cursor to the new line."
-  (interactive "P")
-  (let ((case-fold-search nil))
-    (if (looking-at electrify-return-match)
-	(save-excursion (newline-and-indent)))
-    (newline arg)
-    (indent-according-to-mode)))
+;; (defvar electrify-return-match
+;;   "[\]}\)\"]"
+;;   "If this regexp matches the text after the cursor, do an \"electric\"
+;;   return.")
+
+;; (defun electrify-return-if-match (arg)
+;;   "If the text after the cursor matches `electrify-return-match' then
+;;   open and indent an empty line between the cursor and the text.  Move the
+;;   cursor to the new line."
+;;   (interactive "P")
+;;   (let ((case-fold-search nil))
+;;     (if (looking-at electrify-return-match)
+;; 	(save-excursion (newline-and-indent)))
+;;     (newline arg)
+;;     (indent-according-to-mode)))
 
 ;;;; hook lispyville to racket
 ;; Using local-set-key in a mode-hook is a better idea.
@@ -486,7 +511,7 @@
 			     (selectrum-exhibit 'keep-selected))))
 
 (require 'embark)
-(bind-key "C-S-a" embark-act)
+(bind-key "C-S-a" 'embark-act)
 
 (require 'embark-consult)
 (add-hook 'embark-collect-mode 'embark-consult-preview-minor-mode)
