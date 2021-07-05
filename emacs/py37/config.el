@@ -59,9 +59,6 @@
 ;;;; projectile 
 (require 'projectile)
 (projectile-mode +1)
-;; (setq projectile-project-search-path '("~/projects/" "~/work/" "~/tmp"))
-(setq projectile-project-search-path '("~/tmp"))
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 ;;;; move buffer to frame
 (defun ky-switch-current-window-into-frame ()
   (interactive)
@@ -76,9 +73,13 @@
 ;;;; enable drag and drop
 (setq mouse-drag-and-drop-region t)
 (setq mouse-drag-and-drop-region-cut-when-buffers-differ t)
-;;;; remap kill buffer and window
-(global-set-key (kbd "C-k") 'kill-buffer-and-window)
-            
+;;;; Use shell's $PATH
+(exec-path-from-shell-copy-env "PATH")
+;;;; format line number spacing
+(setq linum-format "%4d \u2502 ")
+;;;; Allow hash to be entered  
+(global-set-key (kbd "M-3") '(lambda () (interactive) (insert "#")))
+
 ;;; Outline Mode
 ;; (use-package bicycle
 ;;   :after outline
@@ -207,11 +208,9 @@
 ;;; Auto complete
 ;; enable globally    
 (add-hook 'after-init-hook 'global-company-mode)
-(global-set-key (kbd "<C-tab>") 'company-complete)
 
 (setq company-idle-delay 0)
 (setq company-dabbrev-downcase 0)
-	
 (defun tab-indent-or-complete ()
   (interactive)
   (if (minibufferp)
@@ -222,8 +221,7 @@
 	    (company-complete-common)
 	  (indent-for-tab-command)))))
 
-;; backtab is equivalent to Shift+Tab
-;; (global-set-key [backtab] 'tab-indent-or-complete)
+(global-set-key [backtab] 'tab-indent-or-complete)
 
 ;;; Orderless
 (use-package orderless
@@ -244,7 +242,7 @@
          ("C-c b" . consult-bookmark)
          ("C-c k" . consult-kmacro)
          ;; C-x bindings (ctl-x-map)
-         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complet-command
          ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
          ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
          ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
@@ -257,10 +255,9 @@
          ("<help> a" . consult-apropos)            ;; orig. apropos-command
          ;; M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
          ("M-g g" . consult-goto-line)             ;; orig. goto-line
          ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-g o" . consult-outline)
          ("M-g m" . consult-mark)
          ("M-g k" . consult-global-mark)
          ("M-g i" . consult-imenu)
@@ -274,18 +271,14 @@
          ("M-s l" . consult-line)
          ("M-s m" . consult-multi-occur)
          ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
          ;; Isearch integration
          ("M-s e" . consult-isearch)
+         ;; ("C-s" . consult-isearch)
          :map isearch-mode-map
          ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
+         ;; ("C-s" . consult-isearch)                 ;; orig. isearch-edit-string
          ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
-         ("M-s l" . consult-line))                 ;; needed by consult-line to detect isearch
-
-  ;; Enable automatic preview at point in the *Completions* buffer.
-  ;; This is relevant when you use the default completion UI,
-  ;; and not necessary for Selectrum, Vertico etc.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
+         ("M-s l" . consult-line))                 ;; required by consult-line to detect isearch
 
   ;; The :init configuration is always executed (Not lazy)
   :init
@@ -308,172 +301,37 @@
   ;; after lazily loading the package.
   :config
 
-  ;; Optionally configure preview. The default value
+  ;; Optionally configure preview. Note that the preview-key can also be
+  ;; configured on a per-command basis via `consult-config'. The default value
   ;; is 'any, such that any key triggers the preview.
   ;; (setq consult-preview-key 'any)
-  ;; (setq consult-preview-key (kbd "M-."))
+  ;; (setq consult-preview-key (kbd "M-p"))
   ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
-  ;; For some commands and buffer sources it is useful to configure the
-  ;; :preview-key on a per-command basis using the `consult-customize' macro.
-  (consult-customize
-   consult-theme
-   :preview-key '(:debounce 0.2 any)
-   consult-ripgrep consult-git-grep consult-grep
-   consult-bookmark consult-recent-file consult-xref
-   consult--source-file consult--source-project-file consult--source-bookmark
-   :preview-key (kbd "M-."))
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<") ;; (kbd "C-+")
 
   ;; Optionally make narrowing help available in the minibuffer.
-  ;; You may want to use `embark-prefix-help-command' or which-key instead.
+  ;; Probably not needed if you are using which-key.
   ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
 
   ;; Optionally configure a function which returns the project root directory.
-  ;; There are multiple reasonable alternatives to chose from.
-  ;;;; 1. project.el (project-roots)
-  (setq consult-project-root-function
-        (lambda ()
-          (when-let (project (project-current))
-            (car (project-roots project)))))
-  ;;;; 2. projectile.el (projectile-project-root)
-  ;; (autoload 'projectile-project-root "projectile")
-  ;; (setq consult-project-root-function #'projectile-project-root)
-  ;;;; 3. vc.el (vc-root-dir)
+  ;; There are multiple reasonable alternatives to chose from:
+  ;; * projectile-project-root
+  ;; * vc-root-dir
+  ;; * project-roots
+  ;; * locate-dominating-file
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-root-function #'projectile-project-root)
+  ;; (setq consult-project-root-function
+  ;;       (lambda ()
+  ;;         (when-let (project (project-current))
+  ;;           (car (project-roots project)))))
   ;; (setq consult-project-root-function #'vc-root-dir)
-  ;;;; 4. locate-dominating-file
-  ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
+  ;; (setq consult-project-root-function
+  ;;       (lambda () (locate-dominating-file "." ".git")))
 )
-
-
-
-;;; Racket Setup
-;; Provides all the racket support
-;; (use-package racket-mode
-;;              :ensure t)
-(require 'racket-mode)
-(use-package rainbow-delimiters
-             :ensure t
-             :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
-;;;; Make buffer names unique
-;; buffernames that are foo<1>, foo<2> are hard to read. This makes them foo|dir  foo|otherdir
-
-;; (use-package uniquify
-;;              :config (setq uniquify-buffer-name-style 'post-forward))
-
-;; ;; Highlight matching parenthesis
-;; Syntax checking
-;; (use-package flycheck
-;;              :ensure t
-;;              :config
-;;              (global-flycheck-mode))
-;;;; Autocomplete popups
-;; (use-package company
-;;              :ensure t
-;;              :config
-;;              (progn
-;;                (setq company-idle-delay 0.2
-;;                      ;; min prefix of 2 chars
-;;                      company-minimum-prefix-length 2
-;;                      company-selection-wrap-around t
-;;                      company-show-numbers t
-;;                      company-dabbrev-downcase nil
-;;                      company-echo-delay 0
-;;                      company-tooltip-limit 20
-;;                      company-transformers '(company-sort-by-occurrence)
-;;                      company-begin-commands '(self-insert-command)
-;;                      )
-;;                (global-company-mode))
-;;              )
-             
-;; Lots of parenthesis and other delimiter niceties
-;; (use-package paredit
-;;              :ensure t
-;;              :config
-;;              (add-hook 'racket-mode-hook #'enable-paredit-mode))
-
-;; ;; Colorizes delimiters so they can be told apart
-;;;; misc
-(show-paren-mode 1)
-(setq show-paren-delay 0)
-
-;; Allows moving through wrapped lines as they appear
-(setq line-move-visual t)
-
-(add-hook 'racket-mode-hook #'racket-unicode-input-method-enable)
-(add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
-(define-key racket-mode-map (kbd "S-<return>") 'racket-send-definition)
-(define-key racket-mode-map (kbd "C-S-<return>") 'racket-send-region)
-(define-key racket-mode-map (kbd "C-\\") 'racket-insert-lambda)
-
-
-;;; Lispy / Paredit
-(use-package paredit
-  :ensure t
-  :config
-  (dolist (m '(emacs-lisp-mode-hook
-	       racket-mode-hook
-	       racket-repl-mode-hook))
-    (add-hook m #'paredit-mode))
-  (bind-keys :map paredit-mode-map
-	     ("{"   . paredit-open-curly)
-	     ("}"   . paredit-close-curly))
-  (unless terminal-frame
-    (bind-keys :map paredit-mode-map
-	       ("M-[" . paredit-wrap-square)
-	       ("M-{" . paredit-wrap-curly))))
-
-(add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
-(add-hook 'racket-mode-hook 'evil-paredit-mode)
-
-
-;; (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-;; (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-;; (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-;; (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-;; (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-;; (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-;; (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-
-;;;; electrify???
-(defvar electrify-return-match
-  "[\]}\)\"]"
-  "If this regexp matches the text after the cursor, do an \"electric\"
-  return.")
-(defun electrify-return-if-match (arg)
-  "If the text after the cursor matches `electrify-return-match' then
-  open and indent an empty line between the cursor and the text.  Move the
-  cursor to the new line."
-  (interactive "P")
-  (let ((case-fold-search nil))
-    (if (looking-at electrify-return-match)
-	(save-excursion (newline-and-indent)))
-    (newline arg)
-    (indent-according-to-mode)))
-
-;;;; hook lispyville to racket
-;; Using local-set-key in a mode-hook is a better idea.
-;; (global-set-key (kbd "RET") 'electrify-return-if-match)
-
-;; (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-;; (add-hook 'racket-mode-hook (lambda () (lispy-mode 1)))
-;; (add-hook 'lispy-mode-hook #'lispyville-mode)
-
-;; running lispyville without lispy
-;; (add-hook 'emacs-lisp-mode-hook #'lispyville-mode)
-;; (add-hook 'lisp-mode-hook #'lispyville-mode)
-;; (add-hook 'racket-mode-hook #'lispyville-mode)
-
-
-
-;; (with-eval-after-load 'lispyville
-;;   (lispyville-set-key-theme
-;;    '(operators
-;;      c-w
-;;      (escape insert)
-;;      (additional-movement normal visual motion))))
 
 
 ;;; Embark
@@ -493,3 +351,32 @@
 
 
 
+
+;;; Python
+;; ein config
+(elpy-enable)
+(pyenv-mode)
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i --simple-prompt")
+
+;; Enable Flycheck
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+;; Enable autopep8
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+
+
+;; Use IPython for REPL
+(setq python-shell-interpreter "jupyter"
+      python-shell-interpreter-args "console --simple-prompt"
+      python-shell-prompt-detect-failure-warning nil)
+
+(add-to-list 'python-shell-completion-native-disabled-interpreters "jupyter")
+
+
+;; emacs-jupyter version (NOT ein)
+;; (add-to-list 'load-path "~/path/to/jupyter")
+;; (require 'jupyter)
