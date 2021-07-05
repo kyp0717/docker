@@ -1,4 +1,3 @@
-
 ;;; Geneneral Setting
 ;;;; modus theme
 (add-to-list 'load-path "~/.emacs.d/modus-themes")
@@ -60,6 +59,9 @@
 ;;;; projectile 
 (require 'projectile)
 (projectile-mode +1)
+;; (setq projectile-project-search-path '("~/projects/" "~/work/" "~/tmp"))
+(setq projectile-project-search-path '("~/tmp"))
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 ;;;; move buffer to frame
 (defun ky-switch-current-window-into-frame ()
   (interactive)
@@ -74,7 +76,9 @@
 ;;;; enable drag and drop
 (setq mouse-drag-and-drop-region t)
 (setq mouse-drag-and-drop-region-cut-when-buffers-differ t)
-
+;;;; remap kill buffer and window
+(global-set-key (kbd "C-k") 'kill-buffer-and-window)
+            
 ;;; Outline Mode
 ;; (use-package bicycle
 ;;   :after outline

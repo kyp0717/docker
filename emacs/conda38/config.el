@@ -58,6 +58,9 @@
 ;;;; projectile 
 (require 'projectile)
 (projectile-mode +1)
+;; (setq projectile-project-search-path '("~/projects/" "~/work/" "~/tmp"))
+(setq projectile-project-search-path '("~/tmp"))
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 ;;;; move buffer to frame
 (defun ky-switch-current-window-into-frame ()
   (interactive)
