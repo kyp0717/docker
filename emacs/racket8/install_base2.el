@@ -18,4 +18,5 @@
 (package-install 'flycheck)
 (package-install 'rainbow-delimiters)
 (package-install 'racket-mode)
+(package-install 'buffer-move)
 ;;(package-install 'uniquify)

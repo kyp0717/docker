@@ -70,8 +70,7 @@
     (unless (one-window-p)
       (delete-window))
     (display-buffer-pop-up-frame buffer nil)))
-;;;; pretty symbol mode
-;; display “lambda” as “λ”
+;;;; display “lambda” as “λ”
 (global-prettify-symbols-mode 1)
 (setq prettify-symbols-alist '(("lambda" . 955)))
 ;;;; enable drag and drop
@@ -194,11 +193,9 @@
 
 ;; (eval-after-load 'outline
 ;;     (define-key evil-normal-state-map [C-tab] 'outline-hide-sublevels))
-
 ;;;; comments
 (require 'evil-commentary)
 (evil-commentary-mode)
-;; (evil-collection-init)
 
 ;;; Auto complete
 ;; enable globally    
@@ -252,15 +249,15 @@
          ("M-y" . consult-yank-pop)                ;; orig. yank-pop
          ("<help> a" . consult-apropos)            ;; orig. apropos-command
          ;; M-g bindings (goto-map)
-         ("M-g e" . consult-compile-error)
-         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-         ("M-g g" . consult-goto-line)             ;; orig. goto-line
-         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-         ("M-g m" . consult-mark)
-         ("M-g k" . consult-global-mark)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-project-imenu)
+         ("M-<menu> e" . consult-compile-error)
+         ("M-<menu> f" . consult-flymake)               ;; Alternative: consult-flycheck
+         ("M-<menu> g" . consult-goto-line)             ;; orig. goto-line
+         ("M-<menu> M-g" . consult-goto-line)           ;; orig. goto-line
+         ("M-<menu> o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-<menu> m" . consult-mark)
+         ("M-<menu> k" . consult-global-mark)
+         ("M-<menu> i" . consult-imenu)
+         ("M-<menu> I" . consult-project-imenu)
          ;; M-s bindings (search-map)
          ("M-s f" . consult-find)
          ("M-s L" . consult-locate)
@@ -346,11 +343,6 @@
 
 
 ;;; Racket Setup
-;; Provides all the racket support
-;; (use-package racket-mode
-;;              :ensure t)
-
-
 ;;;; main racket setup
 ;;(show-paren-mode 1)
 (setq show-paren-delay 0)
@@ -367,7 +359,6 @@
 (define-key racket-mode-map (kbd "S-<return>") 'racket-send-definition)
 (define-key racket-mode-map (kbd "C-S-<return>") 'racket-send-region)
 (define-key racket-mode-map (kbd "C-\\") 'racket-insert-lambda)
-
 
 ;;;; paredit setup
 (use-package paredit
@@ -388,118 +379,50 @@
 ;; (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
 ;; (add-hook 'racket-mode-hook #'paredit-mode)
 ;; (add-hook 'racket-mode-hook 'evil-paredit-mode)
+;;;; display repl in another frame
 
-;;;; Autocomplete popups
-;; (use-package company
-;;              :ensure t
-;;              :config
-;;              (progn
-;;                (setq company-idle-delay 0.2
-;;                      ;; min prefix of 2 chars
-;;                      company-minimum-prefix-length 2
-;;                      company-selection-wrap-around t
-;;                      company-show-numbers t
-;;                      company-dabbrev-downcase nil
-;;                      company-echo-delay 0
-;;                      company-tooltip-limit 20
-;;                      company-transformers '(company-sort-by-occurrence)
-;;                      company-begin-commands '(self-insert-command)
-;;                      )
-;;                (global-company-mode))
-;;              )
-             
-;; Lots of parenthesis and other delimiter niceties
-;; (use-package paredit
-;;              :ensure t
-;;              :config
-;;              (add-hook 'racket-mode-hook #'enable-paredit-mode))
-
-;; ;; Colorizes delimiters so they can be told apart
-;;;; Make buffer names unique
-;; buffernames that are foo<1>, foo<2> are hard to read. This makes them foo|dir  foo|otherdir
-
-;; (use-package uniquify
-;;              :config (setq uniquify-buffer-name-style 'post-forward))
-
-;; ;; Highlight matching parenthesis
-;; Syntax checking
-;; (use-package flycheck
-;;              :ensure t
-;;              :config
-;;              (global-flycheck-mode))
-
-;;; Lispy / Paredit
-
-;;;; setup1 deprecated
-
-;; (use-package paredit
-;;   :ensure t
-;;   :config
-;;   (dolist (m '(emacs-lisp-mode-hook
-;; 	       racket-mode-hook
-;; 	       racket-repl-mode-hook))
-;;     (add-hook m #'paredit-mode))
-;;   (bind-keys :map paredit-mode-map
-;; 	     ("{"   . paredit-open-curly)
-;; 	     ("}"   . paredit-close-curly))
-;;   (unless terminal-frame
-;;     (bind-keys :map paredit-mode-map
-;; 	       ("M-[" . paredit-wrap-square)
-;; 	       ("M-{" . paredit-wrap-curly))))
-
-;; ;; (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
-;; ;; (add-hook 'racket-mode-hook #'paredit-mode)
-;; ;; (add-hook 'racket-mode-hook 'evil-paredit-mode)
-
-;;;; setup2
-;; (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-;; (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-;; (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-;; (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-;; (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-;; (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-;; (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-;; (add-hook 'racket-mode-hook #'enable-paredit-mode)
-
-;;;; electrify???
-;; (defvar electrify-return-match
-;;   "[\]}\)\"]"
-;;   "If this regexp matches the text after the cursor, do an \"electric\"
-;;   return.")
-
-;; (defun electrify-return-if-match (arg)
-;;   "If the text after the cursor matches `electrify-return-match' then
-;;   open and indent an empty line between the cursor and the text.  Move the
-;;   cursor to the new line."
-;;   (interactive "P")
-;;   (let ((case-fold-search nil))
-;;     (if (looking-at electrify-return-match)
-;; 	(save-excursion (newline-and-indent)))
-;;     (newline arg)
-;;     (indent-according-to-mode)))
-
-;;;; hook lispyville to racket
-;; Using local-set-key in a mode-hook is a better idea.
-;; (global-set-key (kbd "RET") 'electrify-return-if-match)
-
-;; (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-;; (add-hook 'racket-mode-hook (lambda () (lispy-mode 1)))
-;; (add-hook 'lispy-mode-hook #'lispyville-mode)
-
-;; running lispyville without lispy
-;; (add-hook 'emacs-lisp-mode-hook #'lispyville-mode)
-;; (add-hook 'lisp-mode-hook #'lispyville-mode)
-;; (add-hook 'racket-mode-hook #'lispyville-mode)
+;; (setq
+;;    display-buffer-alist
+;;    '(("\\*Racket REPL\\*" 
+;;       (display-buffer-pop-up-frame display-buffer-resuse-window display-buffer-same-window)
+;;        ((inhibit-same-window . t) (reusable-frames . t) (inhibit-switch-frame . t))))))
 
 
 
-;; (with-eval-after-load 'lispyville
-;;   (lispyville-set-key-theme
-;;    '(operators
-;;      c-w
-;;      (escape insert)
-;;      (additional-movement normal visual motion))))
 
+;; (setq
+;;    display-buffer-alist
+;;    '(("\\*Racket REPL\\*" 
+;;        (display-buffer-pop-up-frame
+;; 	display-buffer-resuse-window
+;; 	)
+;;        (reusable-frames . 0)
+;;        (inhibit-same-window . t)
+;;        )))
+
+(setq display-buffer-alist nil)
+(add-to-list 'display-buffer-alist
+             '("\\`\\*Racket REPL"
+               (display-buffer-reuse-window
+                display-buffer-pop-up-frame)
+               (reusable-frames . 0)
+               (inhibit-same-window . t)))
+
+
+;; (setq
+;;    display-buffer-alist
+;;    '(("\\*Racket REPL\\*" 
+;;       (display-buffer-resuse-window
+;;        display-buffer-pop-up-frame)
+;;        ((reusable-frames . nil)
+;; 	(inhibit-same-window . t))
+;;        )))
+
+
+
+;; (setq display-buffer-alist
+;;       (quote (("\\*Racket REPL\\*" display-buffer-pop-up-frame
+;;          (nil)))))
 
 ;;; Embark
 
