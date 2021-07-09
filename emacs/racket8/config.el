@@ -79,7 +79,9 @@
 ;;;; remap kill buffer and window
 (global-set-key (kbd "C-k") 'kill-buffer-and-window)
             
-
+;;;; remap other frame and window command
+(global-set-key (kbd "s-o") 'other-window)
+(global-set-key (kbd "M-o") 'other-frame)
 
 ;;; Outline Mode
 ;; (use-package bicycle
@@ -259,21 +261,21 @@
          ("M-<menu> i" . consult-imenu)
          ("M-<menu> I" . consult-project-imenu)
          ;; M-s bindings (search-map)
-         ("M-s f" . consult-find)
-         ("M-s L" . consult-locate)
-         ("M-s g" . consult-grep)
-         ("M-s G" . consult-git-grep)
-         ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)
-         ("M-s m" . consult-multi-occur)
-         ("M-s k" . consult-keep-lines)
-         ("M-s u" . consult-focus-lines)
+         ("M-<menu> f" . consult-find)
+         ("M-<menu> L" . consult-locate)
+         ("M-<menu> g" . consult-grep)
+         ("M-<menu> G" . consult-git-grep)
+         ("M-<menu> r" . consult-ripgrep)
+         ("M-<menu> l" . consult-line)
+         ("M-<menu> m" . consult-multi-occur)
+         ("M-<menu> k" . consult-keep-lines)
+         ("M-<menu> u" . consult-focus-lines)
          ;; Isearch integration
-         ("M-s e" . consult-isearch)
+         ("M-<menu> e" . consult-isearch)
          :map isearch-mode-map
          ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
-         ("M-s l" . consult-line))                 ;; needed by consult-line to detect isearch
+         ("M-<menu> e" . consult-isearch)               ;; orig. isearch-edit-string
+         ("M-<menu> l" . consult-line))                 ;; needed by consult-line to detect isearch
 
   ;; Enable automatic preview at point in the *Completions* buffer.
   ;; This is relevant when you use the default completion UI,
@@ -381,25 +383,6 @@
 ;; (add-hook 'racket-mode-hook 'evil-paredit-mode)
 ;;;; display repl in another frame
 
-;; (setq
-;;    display-buffer-alist
-;;    '(("\\*Racket REPL\\*" 
-;;       (display-buffer-pop-up-frame display-buffer-resuse-window display-buffer-same-window)
-;;        ((inhibit-same-window . t) (reusable-frames . t) (inhibit-switch-frame . t))))))
-
-
-
-
-;; (setq
-;;    display-buffer-alist
-;;    '(("\\*Racket REPL\\*" 
-;;        (display-buffer-pop-up-frame
-;; 	display-buffer-resuse-window
-;; 	)
-;;        (reusable-frames . 0)
-;;        (inhibit-same-window . t)
-;;        )))
-
 (setq display-buffer-alist nil)
 (add-to-list 'display-buffer-alist
              '("\\`\\*Racket REPL"
@@ -408,21 +391,6 @@
                (reusable-frames . 0)
                (inhibit-same-window . t)))
 
-
-;; (setq
-;;    display-buffer-alist
-;;    '(("\\*Racket REPL\\*" 
-;;       (display-buffer-resuse-window
-;;        display-buffer-pop-up-frame)
-;;        ((reusable-frames . nil)
-;; 	(inhibit-same-window . t))
-;;        )))
-
-
-
-;; (setq display-buffer-alist
-;;       (quote (("\\*Racket REPL\\*" display-buffer-pop-up-frame
-;;          (nil)))))
 
 ;;; Embark
 
