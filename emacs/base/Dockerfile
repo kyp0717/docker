@@ -87,5 +87,6 @@ RUN echo 'set -g default-command $SHELL' >> ~/.tmux.conf.local
 RUN mkdir ~/sqlite
 COPY --chown=phage:phage ./init.el /home/phage/.emacs.d/
 COPY --chown=phage:phage ./config.el /home/phage/.emacs.d/
+COPY --chown=phage:phage ./ky-outline-minor-faces.el /home/phage/.emacs.d/custom
 ENTRYPOINT ["tmux", "-u"]
 

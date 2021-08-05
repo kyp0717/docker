@@ -101,24 +101,30 @@
 
 ;;; Outline Mode
 ;;;; main
+
+(use-package ky-outline-minor-faces
+  :after outline
+  :config (add-hook 'outline-minor-mode-hook
+                    'outline-minor-faces-add-font-lock-keywords))
+
 ;;Enables outline-minor-mode for *ALL* programming buffers
 (add-hook 'prog-mode-hook 'outline-minor-mode)
 (add-hook 'prog-mode-hook 'hs-minor-mode)
-(add-hook 'outline-minor-mode-hook 'outline-minor-faces-add-font-lock-keywords)
+;; (add-hook 'outline-minor-mode-hook 'ky-outline-minor-faces-add-font-lock-keywords)
 
-(setq my-black "#1b1b1e")
-(custom-theme-set-faces
- 'modus-vivendi
- `(outline-1 ((t (:height 1.15 :background "#0000cd" ))))
- `(outline-2 ((t (:height 1.05 :foreground "#b58900" :weight bold)))))
-;; (custom-theme-set-faces
-;;  'modus-vivendi
-;;  `(outline-1 ((t (:height 1.25 :background "#268bd2"
-;;                           :foreground ,my-black :weight bold))))
-;;  `(outline-2 ((t (:height 1.15 :background "#2aa198"
-;;                           :foreground ,my-black :weight bold))))
-;;  `(outline-3 ((t (:height 1.05 :background "#b58900"
-;;                           :foreground ,my-black :weight bold)))))
+;; ;; (setq my-black "#1b1b1e")
+;; ;; (custom-theme-set-faces
+;; ;;  'modus-vivendi
+;; ;;  `(outline-1 ((t (:height 1.15 :background "#0000cd" ))))
+;; ;;  `(outline-2 ((t (:height 1.05 :foreground "#b58900" :weight bold)))))
+;; ;; (custom-theme-set-faces
+;; ;;  'modus-vivendi
+;; ;;  `(outline-1 ((t (:height 1.25 :background "#268bd2"
+;; ;;                           :foreground ,my-black :weight bold))))
+;; ;;  `(outline-2 ((t (:height 1.15 :background "#2aa198"
+;; ;;                           :foreground ,my-black :weight bold))))
+;; ;;  `(outline-3 ((t (:height 1.05 :background "#b58900"
+;; ;;                           :foreground ,my-black :weight bold)))))
 
 
 ;;;; experiment1
@@ -549,32 +555,21 @@
 ;;; perspective
 ;; (require 'perspective)
 ;; (persp-mode 1)
+(setq persp-initial-frame-name "startup")
+(use-package perspective
+  :bind (("C-x k" . persp-kill-buffer*))
+  :init (persp-mode))
 
-;;; Outline Mode
-;;;; main
-;;Enables outline-minor-mode for *ALL* programming buffers
-(add-hook 'prog-mode-hook 'outline-minor-mode)
-(add-hook 'prog-mode-hook 'hs-minor-mode)
-(add-hook 'outline-minor-mode-hook 'outline-minor-faces-add-font-lock-keywords)
+(persp-switch "paca")
+(persp-switch "config")
 
-(setq my-black "#1b1b1e")
-(custom-theme-set-faces
- 'modus-vivendi
- `(outline-1 ((t (:height 1.15 :background "#0000cd" ))))
- `(outline-2 ((t (:height 1.05 :foreground "#b58900" :weight bold)))))
-;; (custom-theme-set-faces
-;;  'modus-vivendi
-;;  `(outline-1 ((t (:height 1.25 :background "#268bd2"
-;;                           :foreground ,my-black :weight bold))))
-;;  `(outline-2 ((t (:height 1.15 :background "#2aa198"
-;;                           :foreground ,my-black :weight bold))))
-;;  `(outline-3 ((t (:height 1.05 :background "#b58900"
-;;                           :foreground ,my-black :weight bold)))))
+(global-set-key (kbd "M-p b") 'persp-switch-to-buffer*)
+(global-set-key (kbd "M-p a") 'persp-add-buffer)
+(global-set-key (kbd "M-p n") 'persp-next)
+(global-set-key (kbd "M-p p") 'persp-prev)
 
-
-;;;; outline within dockerfile
-(add-hook 'dockerfile-mode-hook
-  (lambda ()
-    (setq outline-regexp "###\\(#*\\)")))
-;;";;;\\(;* [^]\\|###autoload\\)\\|("
-; note that the "^" is *implicit* at the beginning of the regexp
+;;; centaur tab
+(require 'centaur-tabs)
+(centaur-tabs-mode t)
+(global-set-key (kbd "C-M-<left>")  'centaur-tabs-backward)
+(global-set-key (kbd "C-M-<right>") 'centaur-tabs-forward)
