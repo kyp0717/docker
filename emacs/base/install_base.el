@@ -67,5 +67,5 @@
 (package-install 'perspective)
 (package-install 'vterm)
 (package-install 'docker-tramp)
-(package-install 'centaur-tab)
+(package-install 'centaur-tabs)
 (all-the-icons-install-fonts t)

@@ -560,16 +560,75 @@
   :bind (("C-x k" . persp-kill-buffer*))
   :init (persp-mode))
 
-(persp-switch "paca")
-(persp-switch "config")
+;; (persp-switch "config")
+;; (persp-switch "paca")
 
-(global-set-key (kbd "M-p b") 'persp-switch-to-buffer*)
-(global-set-key (kbd "M-p a") 'persp-add-buffer)
-(global-set-key (kbd "M-p n") 'persp-next)
-(global-set-key (kbd "M-p p") 'persp-prev)
+(global-set-key (kbd "M-p l") 'persp-switch-to-buffer*)
+(global-set-key (kbd "M-p p") 'persp-switch)
+(global-set-key (kbd "M-p =") 'persp-add-buffer)
+(global-set-key (kbd "M-p s") 'persp-set-buffer)
+(global-set-key (kbd "M-p f") 'persp-next)
+(global-set-key (kbd "M-p b") 'persp-prev)
 
 ;;; centaur tab
+
+(setq centaur-tabs-set-icons t)
+(setq centaur-tabs-gray-out-icons 'buffer)
+(setq centaur-tabs-set-bar 'under)
+;; Note: If you're not using Spacmeacs, in order for the underline to display
+;; correctly you must add the following line:
+(setq x-underline-at-descent-line t)
+;; (setq centaur-tabs-set-modified-marker t)
+(setq centaur-tabs-modified-marker "*")
+;; (setq centaur-tabs-close-button "X")
+(setq centaur-tabs-height 32)
+
+
 (require 'centaur-tabs)
 (centaur-tabs-mode t)
-(global-set-key (kbd "C-M-<left>")  'centaur-tabs-backward)
-(global-set-key (kbd "C-M-<right>") 'centaur-tabs-forward)
+(global-set-key (kbd "S-<left>")  'centaur-tabs-backward)
+(global-set-key (kbd "S-<right>") 'centaur-tabs-forward)
+(defun centaur-tabs-hide-tab (x)
+  "Do no to show buffer X in tabs."
+  (let ((name (format "%s" x)))
+    (or
+     ;; Current window is not dedicated window.
+     (window-dedicated-p (selected-window))
+
+     ;; Buffer name not match below blacklist.
+     (string-prefix-p "*epc" name)
+     (string-prefix-p "*helm" name)
+     (string-prefix-p "*Helm" name)
+     (string-prefix-p "*Compile-Log*" name)
+     (string-prefix-p "*lsp" name)
+     (string-prefix-p "*company" name)
+     (string-prefix-p "*Flycheck" name)
+     (string-prefix-p "*tramp" name)
+     (string-prefix-p " *Mini" name)
+     (string-prefix-p "*help" name)
+     (string-prefix-p "*straight" name)
+     (string-prefix-p " *temp" name)
+     (string-prefix-p "*Help" name)
+     (string-prefix-p "*mybuf" name)
+
+     ;; Is not magit buffer.
+     (and (string-prefix-p "magit" name)
+	  (not (file-name-extension name)))
+     )))
+
+(centaur-tabs-hide-tab "*Warnings*")
+
+;;; which key
+(require 'which-key)
+
+;; Allow C-h to trigger which-key before it is done automatically
+(setq which-key-show-early-on-C-h t)
+(setq which-key-popup-type 'minibuffer)
+
+;; make sure which-key doesn't show normally but refreshes quickly after it is
+;; triggered.
+(setq which-key-idle-delay 10000)
+(setq which-key-idle-secondary-delay 0.05)
+(which-key-mode)
+
+(which-key-setup-minibuffer)
