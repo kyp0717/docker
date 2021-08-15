@@ -588,6 +588,7 @@
 (centaur-tabs-mode t)
 (global-set-key (kbd "S-<left>")  'centaur-tabs-backward)
 (global-set-key (kbd "S-<right>") 'centaur-tabs-forward)
+
 (defun centaur-tabs-hide-tab (x)
   "Do no to show buffer X in tabs."
   (let ((name (format "%s" x)))
@@ -610,13 +611,59 @@
      (string-prefix-p " *temp" name)
      (string-prefix-p "*Help" name)
      (string-prefix-p "*mybuf" name)
+     (string-prefix-p "*Warnings" name)
+     (string-prefix-p "*Async-native" name)
+     (string-prefix-p "*Native-compile" name)
+     (string-prefix-p "*Messages" name)
 
      ;; Is not magit buffer.
      (and (string-prefix-p "magit" name)
 	  (not (file-name-extension name)))
      )))
 
-(centaur-tabs-hide-tab "*Warnings*")
+    (defun centaur-tabs-buffer-groups ()
+      "`centaur-tabs-buffer-groups' control buffers' group rules.
+
+    Group centaur-tabs with mode if buffer is derived from `eshell-mode' `emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
+    All buffer name start with * will group to \"Emacs\".
+    Other buffer group by `centaur-tabs-get-group-name' with project name."
+      (list
+	(cond
+	 ((or (string-equal "*" (substring (buffer-name) 0 1))
+	      (memq major-mode '(magit-process-mode
+				 magit-status-mode
+				 magit-diff-mode
+				 magit-log-mode
+				 magit-file-mode
+				 magit-blob-mode
+				 magit-blame-mode
+				 )))
+	  "Emacs")
+	 ;; ((derived-mode-p 'prog-mode)
+	 ;;  "Editing")
+
+	 ((racket-mode-p 'racket-mode)
+	  "Racket")
+	 ((python-mode-p 'python-mode)
+	  "Python")
+	 ((derived-mode-p 'dired-mode)
+	  "Dired")
+	 ((memq major-mode '(helpful-mode
+			     help-mode))
+	  "Help")
+	 ((memq major-mode '(org-mode
+			     org-agenda-clockreport-mode
+			     org-src-mode
+			     org-agenda-mode
+			     org-beamer-mode
+			     org-indent-mode
+			     org-bullets-mode
+			     org-cdlatex-mode
+			     org-agenda-log-mode
+			     diary-mode))
+	  "OrgMode")
+	 (t
+	  (centaur-tabs-get-group-name (current-buffer))))))
 
 ;;; which key
 (require 'which-key)
