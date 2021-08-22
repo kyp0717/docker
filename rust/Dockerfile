@@ -7,12 +7,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y curl zsh tmux git
 RUN apt-get install build-essential -y
  
-RUN mkdir -p /user/turreta-rust-builder/src
-WORKDIR /user/turreta-rust-builder/src
- 
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-ENV PATH="/root/.cargo/bin:${PATH}"
-
 ### Env Var and Create Emacs User
 # Fix "Couldn't register with accessibility bus" error message
 ENV NO_AT_BRIDGE=1
@@ -46,6 +40,10 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && \
 COPY --chown=phage:phage ./.zsh_history /home/phage/
 RUN echo 'alias xclip="xclip -selection c"' >> ~/.zshrc
 RUN echo 'set -g default-command $SHELL' >> ~/.tmux.conf.local
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/home/phage/.cargo/bin:${PATH}"
+
 
 ### Start Up
 ENTRYPOINT ["tmux", "-u"]

@@ -1,5 +1,4 @@
 ;;; Geneneral Setting
-
 ;;;; esc to quit everthing
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 ;;;; modus theme
@@ -30,7 +29,7 @@
             
 ;;;; line num
 (require 'display-line-numbers)
-(defcustom display-line-numbers-exempt-modes '(vterm-mode eshell-mode shell-mode term-mode ansi-term-mode)
+(defcustom display-line-numbers-exempt-modes '(vterm-mode eshell-mode shell-mode term-mode ansi-term-mode racket-repl-mode)
   "Major modes on which to disable the linum mode, exempts them from global requirement"
   :group 'display-line-numbers
   :type 'list
@@ -43,10 +42,12 @@
        (not (minibufferp)))
       (display-line-numbers-mode)))
 
-(global-display-line-numbers-mode)
+(global-display-line-numbers-mode t)
 ;;;; start up msg repress
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
+(menu-bar-mode -1)
+
 (setq inhibit-startup-screen t)  
 (setq make-backup-files nil) ; stop creating ~ files
 (setq warning-minimum-level :error)
@@ -62,6 +63,9 @@
 ;;;; projectile 
 (require 'projectile)
 (projectile-mode +1)
+;; (setq projectile-project-search-path '("~/projects/" "~/work/" "~/tmp"))
+(setq projectile-project-search-path '("~/tmp"))
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 ;;;; move buffer to frame
 (defun ky-switch-current-window-into-frame ()
   (interactive)
@@ -69,8 +73,7 @@
     (unless (one-window-p)
       (delete-window))
     (display-buffer-pop-up-frame buffer nil)))
-;;;; pretty symbol mode
-;; display “lambda” as “λ”
+;;;; display “lambda” as “λ”
 (global-prettify-symbols-mode 1)
 (setq prettify-symbols-alist '(("lambda" . 955)))
 ;;;; enable drag and drop
@@ -87,34 +90,86 @@
 (set-face-background 'hl-line "#3e4446")
 (set-face-foreground 'highlight nil)
 ;; (set-face-attribute 'region nil :background "#666" :foreground "#ffffff")
-;; (setq my-black "#1b1b1e")
+(setq my-black "#1b1b1e")
 (set-face-attribute 'region nil :background "#ffd700" :foreground my-black)
-
 ;;;; increase minibuffer font size
-(defun increase-minibuffer-font-size ()
-       (set (make-local-variable 'face-remapping-alist)
-          '((default :height 1.35))))
+;; (defun increase-minibuffer-font-size ()
+;;        (set (make-local-variable 'face-remapping-alist)
+;;           '((default :height 1.35))))
 
-(add-hook 'minibuffer-setup-hook 'increase-minibuffer-font-size)
-
+;; (add-hook 'minibuffer-setup-hook 'increase-minibuffer-font-size)
 
 ;;; Outline Mode
-;; (use-package bicycle
-;;   :after outline
-;;   :bind (:map outline-minor-mode-map
-;; 	      ;; ("<C-tab>" . bicycle-cycle)
-;; 	      ("<C-tab>" . bicycle-cycle-global)))
+;;;; main
 
-
-(use-package prog-mode
-  :config
- (add-hook 'prog-mode-hook 'outline-minor-mode)
- (add-hook 'prog-mode-hook 'hs-minor-mode))
-
-(use-package outline-minor-faces
+(use-package ky-outline-minor-faces
   :after outline
   :config (add-hook 'outline-minor-mode-hook
                     'outline-minor-faces-add-font-lock-keywords))
+
+;;Enables outline-minor-mode for *ALL* programming buffers
+(add-hook 'prog-mode-hook 'outline-minor-mode)
+(add-hook 'prog-mode-hook 'hs-minor-mode)
+;; (add-hook 'outline-minor-mode-hook 'ky-outline-minor-faces-add-font-lock-keywords)
+
+;; ;; (setq my-black "#1b1b1e")
+;; ;; (custom-theme-set-faces
+;; ;;  'modus-vivendi
+;; ;;  `(outline-1 ((t (:height 1.15 :background "#0000cd" ))))
+;; ;;  `(outline-2 ((t (:height 1.05 :foreground "#b58900" :weight bold)))))
+;; ;; (custom-theme-set-faces
+;; ;;  'modus-vivendi
+;; ;;  `(outline-1 ((t (:height 1.25 :background "#268bd2"
+;; ;;                           :foreground ,my-black :weight bold))))
+;; ;;  `(outline-2 ((t (:height 1.15 :background "#2aa198"
+;; ;;                           :foreground ,my-black :weight bold))))
+;; ;;  `(outline-3 ((t (:height 1.05 :background "#b58900"
+;; ;;                           :foreground ,my-black :weight bold)))))
+
+
+;;;; experiment1
+;; (defun -add-font-lock-kwds (FONT-LOCK-ALIST)
+;;   (font-lock-add-keywords
+;;    nil (--map (-let (((rgx uni-point) it))
+;;                 `(,rgx (0 (progn
+;;                             (compose-region (match-beginning 1) (match-end 1)
+;;                                             ,(concat "\t" (list uni-point)))
+;;                             nil))))
+;;               FONT-LOCK-ALIST)))
+
+;; (defmacro add-font-locks (FONT-LOCK-HOOKS-ALIST)
+;;   `(--each ,FONT-LOCK-HOOKS-ALIST
+;;      (-let (((font-locks . mode-hooks) it))
+;;        (--each mode-hooks
+;;          (add-hook it (-partial '-add-font-lock-kwds
+;;                                 (symbol-value font-locks)))))))
+
+;; (defconst emacs-outlines-font-lock-alist
+;;   ;; Outlines
+;;   '(("\\(^;;;\\) "          ?■)
+;;     ("\\(^;;;;\\) "         ?○)
+;;     ("\\(^;;;;;\\) "        ?✸)
+;;     ("\\(^;;;;;;\\) "       ?✿)))
+
+
+
+;;;; experiment2
+;; not working
+;; (require 'dash)
+;; (require 'outshine)
+;; (add-hook 'prog-mode-hook 'outline-minor-mode)
+;; (add-hook 'prog-mode-hook 'hs-minor-mode)
+;; (add-hook 'emacs-lisp-mode-hook 'outshine-mode)
+;; (add-hook 'racket-mode-hook 'outshine-mode)
+;; (add-hook 'docker-mode-hook 'outshine-mode)
+
+;; Narrowing now works within the headline rather than requiring to be on it
+;; (advice-add 'outshine-narrow-to-subtree :before
+;;             (lambda (&rest args) (unless (outline-on-heading-p t)
+;;                                    (outline-previous-visible-heading 1))))
+
+
+
 ;;;; outline within dockerfile
 (add-hook 'dockerfile-mode-hook
   (lambda ()
@@ -139,13 +194,11 @@
 ;; 	evil-operator-state-cursor '("red" hollow)
 ;; 	evil-cross-lines t)
 ;;   )
-;;;; evil main
+;; Enable hybrid mode (emacs binding in insert state)
+;;;; preset evil variable
+(setq evil-disable-insert-state-bindings t)
 (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
 (setq evil-want-keybinding nil)
-(require 'evil)
-
-(evil-mode 1)
-
 (setq evil-emacs-state-cursor '("red" box)
       evil-normal-state-cursor '("green" box)
       evil-visual-state-cursor '("orange" box)
@@ -153,6 +206,9 @@
       evil-replace-state-cursor '("red" bar)
       evil-operator-state-cursor '("red" hollow)
       evil-cross-lines t)
+;;;; evil main
+(require 'evil)
+(evil-mode 1)
 (define-key evil-normal-state-map "=" 'er/expand-region)
 (define-key evil-normal-state-map (kbd "C-r") 'undo-redo)
 
@@ -166,20 +222,12 @@
 ;;(global-set-key [C-tab] 'outline-hide-sublevels)
 ;;;; evil collection
 
-;;(with-eval-after-load 'outline (evil-collection-outline-setup))
-
-;; (defun ky/outline-hide-all ()
-;;   (local-set-key (kbd "C-TAB") 'outline-hide-sublevel))
-
-
 ;; (setq evil-collection-outline-bind-tab-p t)
 ;; (setq evil-collection-outline-enable-in-minor-mode-p t)
 ;; (setq outline-blank-line t)
 ;; (setq evil-collection-mode-list nil)
-;; (push 'ky-outline evil-collection-mode-list)
 ;; (when (require 'evil-collection nil t)
 ;;    (evil-collection-init 'outline))
-
 
 (use-package evil-collection
 ;;   :bind (:map outline-minor-mode-map
@@ -217,11 +265,22 @@
 
 ;; (eval-after-load 'outline
 ;;     (define-key evil-normal-state-map [C-tab] 'outline-hide-sublevels))
-
 ;;;; comments
 (require 'evil-commentary)
 (evil-commentary-mode)
-;; (evil-collection-init)
+;;;; outline evil
+;; (let ((kmap outline-minor-mode-map))
+;;   (define-key kmap (kbd "M-RET") 'outshine-insert-heading)
+;;   (define-key kmap (kbd "<backtab>") 'outshine-cycle-buffer)
+
+;;   ;; Evil outline navigation keybindings
+;;   (evil-define-key '(normal visual motion) kmap
+;;     "gh" 'outline-up-heading
+;;     "gj" 'outline-forward-same-level
+;;     "gk" 'outline-backward-same-level
+;;     "gl" 'outline-next-visible-heading
+;;     "gu" 'outline-previous-visible-heading))
+
 
 ;;; Auto complete
 ;; enable globally    
@@ -255,6 +314,7 @@
 
 ;;; Consult
 ;; Example configuration for Consult
+;; s key is "super key" which is also the window key
 (use-package consult
   ;; Replace bindings. Lazily loaded due by `use-package'.
   :bind (;; C-c bindings (mode-specific-map)
@@ -273,6 +333,7 @@
          ("C-M-#" . consult-register)
          ;; Other custom bindings
          ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ("s-y" . consult-yank-pop)                ;; orig. yank-pop
          ("<help> a" . consult-apropos)            ;; orig. apropos-command
          ;; M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
@@ -285,25 +346,25 @@
          ("M-g i" . consult-imenu)
          ("M-g I" . consult-project-imenu)
          ;; M-s bindings (search-map)
-         ("M-s f" . consult-find)
+         ("s-f" . consult-find)
          ("M-s L" . consult-locate)
          ("M-s g" . consult-grep)
          ("M-s G" . consult-git-grep)
-         ("M-s r" . consult-ripgrep)
-         ("M-s l" . consult-line)
+         ("s-r" . consult-ripgrep)
+         ("s-l" . consult-line)
          ("M-s m" . consult-multi-occur)
          ("M-s k" . consult-keep-lines)
          ("M-s u" . consult-focus-lines)
          ;; Isearch integration
-         ("M-s e" . consult-isearch)
+         ("s-e" . consult-isearch)
          :map isearch-mode-map
          ("M-e" . consult-isearch)                 ;; orig. isearch-edit-string
-         ("M-s e" . consult-isearch)               ;; orig. isearch-edit-string
-         ("M-s l" . consult-line))                 ;; needed by consult-line to detect isearch
+         ("s-e" . consult-isearch)               ;; orig. isearch-edit-string
+         ("s-l" . consult-line))                 ;; needed by consult-line to detect isearch
 
   ;; Enable automatic preview at point in the *Completions* buffer.
   ;; This is relevant when you use the default completion UI,
-  ;; and not necessary for Selectrum, Vertico etc.
+  ;; and not necessary for Vertico, Selectrum, etc.
   :hook (completion-list-mode . consult-preview-at-point-mode)
 
   ;; The :init configuration is always executed (Not lazy)
@@ -318,6 +379,9 @@
   ;; Optionally tweak the register preview window.
   ;; This adds thin lines, sorting and hides the mode line of the window.
   (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Optionally replace `completing-read-multiple' with an enhanced version.
+  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
 
   ;; Use Consult to select xref locations with preview
   (setq xref-show-xrefs-function #'consult-xref
@@ -366,133 +430,28 @@
   ;; (setq consult-project-root-function (lambda () (locate-dominating-file "." ".git")))
 )
 
+;;; Paranthesis Setup 
+;;;; main racket setup
+;;(show-paren-mode 1)
+(setq show-paren-delay 0)
+;; (require 'racket-mode)
 
 
-;;; Racket Setup
-;; Provides all the racket support
-;; (use-package racket-mode
-;;              :ensure t)
-(require 'racket-mode)
 (use-package rainbow-delimiters
              :ensure t
              :config (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
-;;;; Make buffer names unique
-;; buffernames that are foo<1>, foo<2> are hard to read. This makes them foo|dir  foo|otherdir
-
-;; (use-package uniquify
-;;              :config (setq uniquify-buffer-name-style 'post-forward))
-
-;; ;; Highlight matching parenthesis
-;; Syntax checking
-;; (use-package flycheck
-;;              :ensure t
-;;              :config
-;;              (global-flycheck-mode))
-;;;; Autocomplete popups
-;; (use-package company
-;;              :ensure t
-;;              :config
-;;              (progn
-;;                (setq company-idle-delay 0.2
-;;                      ;; min prefix of 2 chars
-;;                      company-minimum-prefix-length 2
-;;                      company-selection-wrap-around t
-;;                      company-show-numbers t
-;;                      company-dabbrev-downcase nil
-;;                      company-echo-delay 0
-;;                      company-tooltip-limit 20
-;;                      company-transformers '(company-sort-by-occurrence)
-;;                      company-begin-commands '(self-insert-command)
-;;                      )
-;;                (global-company-mode))
-;;              )
-             
-;; Lots of parenthesis and other delimiter niceties
-;; (use-package paredit
-;;              :ensure t
-;;              :config
-;;              (add-hook 'racket-mode-hook #'enable-paredit-mode))
-
-;; ;; Colorizes delimiters so they can be told apart
-;;;; misc
-(show-paren-mode 1)
-(setq show-paren-delay 0)
 
 ;; Allows moving through wrapped lines as they appear
-(setq line-move-visual t)
-
-(add-hook 'racket-mode-hook #'racket-unicode-input-method-enable)
-(add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
-(define-key racket-mode-map (kbd "S-<return>") 'racket-send-definition)
-(define-key racket-mode-map (kbd "C-S-<return>") 'racket-send-region)
-(define-key racket-mode-map (kbd "C-\\") 'racket-insert-lambda)
+;; (add-hook 'racket-mode-hook #'racket-unicode-input-method-enable)
+;; (add-hook 'racket-repl-mode-hook #'racket-unicode-input-method-enable)
+;; (define-key racket-mode-map (kbd "S-<return>") 'racket-send-definition)
+;; (define-key racket-mode-map (kbd "C-S-<return>") 'racket-send-region)
+;; (define-key racket-mode-map (kbd "C-\\") 'racket-insert-lambda)
 
 
-;;; Lispy / Paredit
-(use-package paredit
-  :ensure t
-  :config
-  (dolist (m '(emacs-lisp-mode-hook
-	       racket-mode-hook
-	       racket-repl-mode-hook))
-    (add-hook m #'paredit-mode))
-  (bind-keys :map paredit-mode-map
-	     ("{"   . paredit-open-curly)
-	     ("}"   . paredit-close-curly))
-  (unless terminal-frame
-    (bind-keys :map paredit-mode-map
-	       ("M-[" . paredit-wrap-square)
-	       ("M-{" . paredit-wrap-curly))))
+;;; Rust Setup
 
-(add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
-(add-hook 'racket-mode-hook 'evil-paredit-mode)
-
-
-;; (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
-;; (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
-;; (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
-;; (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
-;; (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
-;; (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
-;; (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
-
-;;;; electrify???
-(defvar electrify-return-match
-  "[\]}\)\"]"
-  "If this regexp matches the text after the cursor, do an \"electric\"
-  return.")
-(defun electrify-return-if-match (arg)
-  "If the text after the cursor matches `electrify-return-match' then
-  open and indent an empty line between the cursor and the text.  Move the
-  cursor to the new line."
-  (interactive "P")
-  (let ((case-fold-search nil))
-    (if (looking-at electrify-return-match)
-	(save-excursion (newline-and-indent)))
-    (newline arg)
-    (indent-according-to-mode)))
-
-;;;; hook lispyville to racket
-;; Using local-set-key in a mode-hook is a better idea.
-;; (global-set-key (kbd "RET") 'electrify-return-if-match)
-
-;; (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-;; (add-hook 'racket-mode-hook (lambda () (lispy-mode 1)))
-;; (add-hook 'lispy-mode-hook #'lispyville-mode)
-
-;; running lispyville without lispy
-;; (add-hook 'emacs-lisp-mode-hook #'lispyville-mode)
-;; (add-hook 'lisp-mode-hook #'lispyville-mode)
-;; (add-hook 'racket-mode-hook #'lispyville-mode)
-
-
-
-;; (with-eval-after-load 'lispyville
-;;   (lispyville-set-key-theme
-;;    '(operators
-;;      c-w
-;;      (escape insert)
-;;      (additional-movement normal visual motion))))
+(require 'rust-mode)
 
 
 ;;; Embark
@@ -504,11 +463,150 @@
 	    (lambda () (when (bound-and-true-p selectru-mode)
 			     (selectrum-exhibit 'keep-selected))))
 
-(require 'embark)
-(bind-key "C-S-a" embark-act)
+;;(require 'embark)
+;;(bind-key "C-S-a" 'embark-act)
 
 (require 'embark-consult)
 (add-hook 'embark-collect-mode 'embark-consult-preview-minor-mode)
 
 
 
+
+
+;;; SQL
+;; (require 'sql)
+
+;;; modeline config
+(require 'doom-modeline)
+(doom-modeline-mode 1)
+
+;;; vterm
+;; (require 'vterm)
+
+;;; perspective
+;; (require 'perspective)
+;; (persp-mode 1)
+(setq persp-initial-frame-name "startup")
+(use-package perspective
+  :bind (("C-x k" . persp-kill-buffer*))
+  :init (persp-mode))
+
+;; (persp-switch "config")
+;; (persp-switch "paca")
+
+(global-set-key (kbd "M-p l") 'persp-switch-to-buffer*)
+(global-set-key (kbd "M-p p") 'persp-switch)
+(global-set-key (kbd "M-p =") 'persp-add-buffer)
+(global-set-key (kbd "M-p s") 'persp-set-buffer)
+(global-set-key (kbd "M-p f") 'persp-next)
+(global-set-key (kbd "M-p b") 'persp-prev)
+
+;;; centaur tab
+
+(setq centaur-tabs-set-icons t)
+(setq centaur-tabs-gray-out-icons 'buffer)
+(setq centaur-tabs-set-bar 'under)
+;; Note: If you're not using Spacmeacs, in order for the underline to display
+;; correctly you must add the following line:
+(setq x-underline-at-descent-line t)
+;; (setq centaur-tabs-set-modified-marker t)
+(setq centaur-tabs-modified-marker "*")
+;; (setq centaur-tabs-close-button "X")
+(setq centaur-tabs-height 32)
+
+
+(require 'centaur-tabs)
+(centaur-tabs-mode t)
+(global-set-key (kbd "S-<left>")  'centaur-tabs-backward)
+(global-set-key (kbd "S-<right>") 'centaur-tabs-forward)
+
+(defun centaur-tabs-hide-tab (x)
+  "Do no to show buffer X in tabs."
+  (let ((name (format "%s" x)))
+    (or
+     ;; Current window is not dedicated window.
+     (window-dedicated-p (selected-window))
+
+     ;; Buffer name not match below blacklist.
+     (string-prefix-p "*epc" name)
+     (string-prefix-p "*helm" name)
+     (string-prefix-p "*Helm" name)
+     (string-prefix-p "*Compile-Log*" name)
+     (string-prefix-p "*lsp" name)
+     (string-prefix-p "*company" name)
+     (string-prefix-p "*Flycheck" name)
+     (string-prefix-p "*tramp" name)
+     (string-prefix-p " *Mini" name)
+     (string-prefix-p "*help" name)
+     (string-prefix-p "*straight" name)
+     (string-prefix-p " *temp" name)
+     (string-prefix-p "*Help" name)
+     (string-prefix-p "*mybuf" name)
+     (string-prefix-p "*Warnings" name)
+     (string-prefix-p "*Async-native" name)
+     (string-prefix-p "*Native-compile" name)
+     (string-prefix-p "*Messages" name)
+
+     ;; Is not magit buffer.
+     (and (string-prefix-p "magit" name)
+	  (not (file-name-extension name)))
+     )))
+
+(defun centaur-tabs-buffer-groups ()
+  "`centaur-tabs-buffer-groups' control buffers' group rules.
+
+    Group centaur-tabs with mode if buffer is derived from `eshell-mode' `emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
+    All buffer name start with * will group to \"Emacs\".
+    Other buffer group by `centaur-tabs-get-group-name' with project name."
+  (list
+   (cond
+    ((or (string-equal "*" (substring (buffer-name) 0 1))
+	 (memq major-mode '(magit-process-mode
+			    magit-status-mode
+			    magit-diff-mode
+			    magit-log-mode
+			    magit-file-mode
+			    magit-blob-mode
+			    magit-blame-mode
+			    )))
+     "Emacs")
+    ;; ((derived-mode-p 'prog-mode)
+    ;;  "Editing")
+
+    ((derived-mode-p 'racket-mode)
+     "Racket")
+    ((derived-mode-p 'python-mode)
+     "Python")
+    ((derived-mode-p 'dired-mode)
+     "Dired")
+    ((memq major-mode '(helpful-mode
+			help-mode))
+     "Help")
+    ((memq major-mode '(org-mode
+			org-agenda-clockreport-mode
+			org-src-mode
+			org-agenda-mode
+			org-beamer-mode
+			org-indent-mode
+			org-bullets-mode
+			org-cdlatex-mode
+			org-agenda-log-mode
+			diary-mode))
+     "OrgMode")
+    (t
+     (centaur-tabs-get-group-name (current-buffer))))))
+
+;;; which key
+(require 'which-key)
+
+;; Allow C-h to trigger which-key before it is done automatically
+(setq which-key-show-early-on-C-h t)
+(setq which-key-popup-type 'minibuffer)
+
+;; make sure which-key doesn't show normally but refreshes quickly after it is
+;; triggered.
+(setq which-key-idle-delay 10000)
+(setq which-key-idle-secondary-delay 0.05)
+(which-key-mode)
+
+(which-key-setup-minibuffer)
