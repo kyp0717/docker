@@ -45,6 +45,12 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/home/phage/.cargo/bin:${PATH}"
 
 
+RUN rustup component add rust-src
+RUN  git clone https://github.com/rust-analyzer/rust-analyzer.git && \
+     cd rust-analyzer && \
+     cargo xtask install --server # will install rust-analyzer into $HOME/.cargo/bin
+
+
 ### Start Up
 ENTRYPOINT ["tmux", "-u"]
 
