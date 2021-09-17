@@ -1,10 +1,12 @@
 ### Base Image
 FROM andreacorallo/emacs-nativecomp
 
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 ### Dependencies
-RUN apt-get update && \
+RUN apt-get update  --allow-releaseinfo-change && \
     apt-get upgrade -y && \
     apt-get install -y \
+            # dialog apt-utils \
             curl \
             git \
             gnupg \

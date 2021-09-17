@@ -2,7 +2,7 @@
 FROM andreacorallo/emacs-nativecomp
 
 ### Dependencies
-RUN apt-get update && \
+RUN apt-get update  --allow-releaseinfo-change && \
     apt-get upgrade -y && \
     apt-get install -y \
             curl \
@@ -35,8 +35,7 @@ RUN apt-get update && \
     default-jre \
     zsh \
     wget \
-    tmux sudo sqlite3 \
-    cmake libtool libtool-bin mu4e \
+    tmux sudo  \
     && rm -rf /var/lib/apt/lists/* /tmp/* /root/.cache/*
 
 ### Env Var and Create Emacs User
