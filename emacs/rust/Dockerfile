@@ -36,6 +36,8 @@ RUN apt-get update  --allow-releaseinfo-change && \
     zsh \
     wget \
     tmux sudo  \
+    build-essential \
+    neovim \
     && rm -rf /var/lib/apt/lists/* /tmp/* /root/.cache/*
 
 ### Env Var and Create Emacs User
@@ -83,9 +85,16 @@ COPY --chown=phage:phage ./.zsh_history /home/phage/
 RUN echo 'alias xclip="xclip -selection c"' >> ~/.zshrc
 RUN echo 'set -g default-command $SHELL' >> ~/.tmux.conf.local
 
-RUN mkdir ~/sqlite
 COPY --chown=phage:phage ./init.el /home/phage/.emacs.d/
 COPY --chown=phage:phage ./config.el /home/phage/.emacs.d/
 COPY --chown=phage:phage ./ky-outline-minor-faces.el /home/phage/.emacs.d/custom
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/home/phage/.cargo/bin:${PATH}"
+
+RUN rustup component add rust-src
+RUN  git clone https://github.com/rust-analyzer/rust-analyzer.git && \
+     cd rust-analyzer && \
+     cargo xtask install --server # will install rust-analyzer into $HOME/.cargo/bin
 ENTRYPOINT ["tmux", "-u"]
 

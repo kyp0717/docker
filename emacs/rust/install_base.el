@@ -67,4 +67,7 @@
 (package-install 'docker-tramp)
 (package-install 'centaur-tabs)
 (package-install 'rust-mode)
+(package-install 'rustic)
+(package-install 'lsp-mode)
+(package-install 'lsp-ui)
 (all-the-icons-install-fonts t)

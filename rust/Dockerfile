@@ -1,15 +1,47 @@
 ### Base Image
-FROM ubuntu
+FROM andreacorallo/emacs-nativecomp
 
-ENV DEBIAN_FRONTEND=noninteractive
+### Dependencies
+RUN apt-get update  --allow-releaseinfo-change && \
+    apt-get upgrade -y && \
+    apt-get install -y \
+            curl \
+            git \
+            gnupg \
+            gpm \
+            imagemagick \
+            ispell \
+            libacl1 \
+            libasound2 \
+            libcanberra-gtk3-module \
+            libdbus-1-3 \
+            libgif7 \
+            libgnutls30 \
+            libgtk-3-0 \
+            libjansson4 \
+            libjpeg-dev \
+            liblcms2-2 \
+            libm17n-0 \
+            libpng16-16 \
+            librsvg2-2 \
+            libsm6 \
+            libtiff5 \
+            libx11-xcb1 \
+            libxml2 \
+            libxpm4 \
+           openssh-client \
+            texinfo \
+            rlwrap \
+    default-jre \
+    zsh \
+    wget \
+    tmux sudo  \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /root/.cache/*
 
- 
-RUN apt-get update && apt-get install -y curl zsh tmux git
-RUN apt-get install build-essential -y
- 
 ### Env Var and Create Emacs User
 # Fix "Couldn't register with accessibility bus" error message
 ENV NO_AT_BRIDGE=1
+#### test sub heading
 ENV UNAME="phage" \
     GNAME="phage" \
     UHOME="/home/phage" \
@@ -28,7 +60,17 @@ RUN chown root /tmp/emacs_user.sh && \
 USER phage
 WORKDIR /home/phage
 
-    ### Install tools
+### Configure Emacs
+RUN mkdir ~/.emacs.d && \
+    mkdir ~/.emacs.d/themes && \ 
+    mkdir ~/.emacs.d/custom
+
+RUN git clone https://github.com/emacsmirror/modus-themes.git ~/.emacs.d/modus-themes
+
+COPY --chown=phage:phage ./install*.el /home/phage/.emacs.d/
+RUN emacs -l ~/.emacs.d/install_base.el -batch 
+
+### Install tools
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 RUN sed -i "s|robbyrussell|jtriley|g" ~/.zshrc
 RUN git clone https://github.com/gpakosz/.tmux.git && \
@@ -41,6 +83,10 @@ COPY --chown=phage:phage ./.zsh_history /home/phage/
 RUN echo 'alias xclip="xclip -selection c"' >> ~/.zshrc
 RUN echo 'set -g default-command $SHELL' >> ~/.tmux.conf.local
 
+COPY --chown=phage:phage ./init.el /home/phage/.emacs.d/
+COPY --chown=phage:phage ./config.el /home/phage/.emacs.d/
+COPY --chown=phage:phage ./ky-outline-minor-faces.el /home/phage/.emacs.d/custom
+
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/home/phage/.cargo/bin:${PATH}"
 
@@ -49,12 +95,5 @@ RUN  git clone https://github.com/rust-analyzer/rust-analyzer.git && \
      cd rust-analyzer && \
      cargo xtask install --server # will install rust-analyzer into $HOME/.cargo/bin
 
-RUN rustup component add rust-src
-RUN  git clone https://github.com/rust-analyzer/rust-analyzer.git && \
-     cd rust-analyzer && \
-     cargo xtask install --server # will install rust-analyzer into $HOME/.cargo/bin
-
-
-### Start Up
 ENTRYPOINT ["tmux", "-u"]
 
