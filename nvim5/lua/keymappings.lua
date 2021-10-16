@@ -35,9 +35,8 @@ map('n', '<C-k>', '<C-w>k')
 map('n', '<C-l>', '<C-w>l')
 
 -- buffer movement
-map('n', '<C-S-Right>', ':bnext<CR>')
-map('n', '<C-S-Left>', ':bprevious<CR>')
-
+map('n', '<Leader>bp', ':BufferPrevious<CR>', opts)
+map('n', '<Leader>bb', ':BufferNext<CR>', opts)
 -- hilight indenting
 map('n', '<', '<gv')
 map('n', '>', '>gv')
