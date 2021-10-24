@@ -26,8 +26,8 @@ map('n', '<Leader>e', ':NvimTreeToggle<CR>')
 map('n', '<Leader>ff', "<cmd>lua require('telescope.builtin').find_files()<CR>")
 map('n', '<Leader>fg', "<cmd>lua require('telescope.builtin').live_grep()<CR>")
 map('n', '<Leader>fb', "<cmd>lua require('telescope.builtin').buffers()<CR>")
+map('n', '<Leader>fc', "<cmd>lua require('telescope.builtin').file_browser()<CR>")
 map('n', '<Leader>fh', "<cmd>lua require('telescope.builtin').help_tags()<CR>")
-
 -- window movement 
 map('n', '<C-h>', '<C-w>h')
 map('n', '<C-j>', '<C-w>j')
@@ -36,7 +36,10 @@ map('n', '<C-l>', '<C-w>l')
 
 -- buffer movement
 map('n', '<Leader>bp', ':BufferPrevious<CR>', opts)
-map('n', '<Leader>bb', ':BufferNext<CR>', opts)
+map('n', '\\\\', ':BufferNext<CR>', opts)
+-- Close buffer
+map('n', '\\c', ':BufferClose<CR>')
+
 -- hilight indenting
 map('n', '<', '<gv')
 map('n', '>', '>gv')
@@ -47,5 +50,6 @@ map('x', 'K', ':move \'<-2<CR>gv-gv\'')
 
 -- saving like VScode
 map('n', '<C-s>', ':w<CR>')
+map('i', '<C-s>', '<C-o:w<CR>')
 
 
