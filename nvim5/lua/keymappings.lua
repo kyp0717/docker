@@ -50,6 +50,6 @@ map('x', 'K', ':move \'<-2<CR>gv-gv\'')
 
 -- saving like VScode
 map('n', '<C-s>', ':w<CR>')
-map('i', '<C-s>', '<C-o:w<CR>')
+map('i', '<C-s>', '<C-o>:w<CR>')
 
 
