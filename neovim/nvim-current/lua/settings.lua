@@ -1,16 +1,17 @@
+local cmd = vim.cmd  -- to execute Vim commands e.g. cmd('pwd')
 local fn = vim.fn    -- to call Vim functions e.g. fn.bufnr()
 local g = vim.g      -- a table to access global variables
 local opt = vim.opt  -- to set options
 
 
-vim.cmd 'colorscheme elflord'            -- Put your favorite colorscheme here
+vim.cmd 'colorscheme modus-vivendi'            -- Put your favorite colorscheme here
 opt.completeopt = {'menuone', 'noinsert', 'noselect'}  -- Completion options (for deoplete)
 opt.expandtab = true                -- Use spaces instead of tabs
 opt.hidden = true                   -- Enable background buffers
 opt.ignorecase = true               -- Ignore case
 opt.joinspaces = false              -- No double spaces with join
 -- opt.list = true                     -- Show some invisible characters
--- opt.number = true                   -- Show line numbers
+opt.number = true                   -- Show line numbers
 -- opt.relativenumber = true           -- Relative line numbers
 opt.scrolloff = 4                   -- Lines of context
 opt.shiftround = true               -- Round indent
@@ -27,3 +28,4 @@ opt.wrap = false                    -- Disable line wrap
 -- opt.paste = true
 opt.hlsearch = true
 opt.cursorline = true
+vim.cmd 'set colorcolumn=80'

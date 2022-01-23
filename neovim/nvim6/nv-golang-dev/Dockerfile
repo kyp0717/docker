@@ -13,28 +13,28 @@ RUN  apt-get update && apt-get install -y neovim git wget curl zsh
 # Fix "Couldn't register with accessibility bus" error message
 ENV NO_AT_BRIDGE=1
 #### test sub heading
-ENV UNAME="neo" \
-    GNAME="neo" \
-    UHOME="/home/neo" \
+ENV UNAME="phage" \
+    GNAME="phage" \
+    UHOME="/home/phage" \
     UID="1000" \
     GID="1000" \
     WORK="/mnt/work" \
     SHELL="/bin/bash"
 
     ### Create Emacs User and Group
-COPY neo_user.sh /tmp/
+COPY phage_user.sh /tmp/
 
 # Only for sudoers
-RUN chown root /tmp/neo_user.sh && \
-    chmod 700  /tmp/neo_user.sh && \
-    /tmp/neo_user.sh
+RUN chown root /tmp/phage_user.sh && \
+    chmod 700  /tmp/phage_user.sh && \
+    /tmp/phage_user.sh
 
-USER neo
-WORKDIR /home/neo
+USER phage
+WORKDIR /home/phage
 
 
 
-# COPY --chown=neo:neo ./install*.el /home/neo/.emacs.d/
+# COPY --chown=phage:phage ./install*.el /home/neo/.emacs.d/
 
 ### Install tools
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -48,10 +48,10 @@ RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && \
 RUN git clone --depth 1 https://github.com/wbthomason/packer.nvim\
  ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
-RUN mkdir -p /home/neo/.config/nvim
+RUN mkdir -p /home/phage/.config/nvim
 
-COPY --chown=neo:neo ./init.lua /home/neo/.config/nvim/ 
-COPY --chown=neo:neo ./lua /home/neo/.config/nvim/lua 
+COPY --chown=phage:phage ./init.lua /home/phage/.config/nvim/ 
+COPY --chown=phage:phage ./lua /home/phage/.config/nvim/lua 
 
 RUN nvim --headless +PackerInstall +qall
 RUN nvim --headless +PackerUpdate +qall
@@ -61,5 +61,5 @@ RUN nvim --headless +PackerUpdate +qall
 ## Once Packer has install all packages, then update lua init file
 RUN nvim --headless -c 'autocmd User PackerComplete quitall' -c 'silent PackerSync'
 RUN nvim --headless +"sleep 5" +"silent TSInstall go python bash" +"silent LspInstall go python" +"silent LspInstall bash" +"sleep 60" +qa
-COPY --chown=neo:neo ./init2.lua /home/neo/.config/nvim/init.lua 
-COPY ./main.go /home/neo/
+COPY --chown=phage:phage ./init2.lua /home/phage/.config/nvim/init.lua 
+COPY ./main.go /home/phage/
