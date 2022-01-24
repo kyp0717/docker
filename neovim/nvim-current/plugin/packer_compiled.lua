@@ -57,7 +57,7 @@ end
 time([[Luarocks path setup]], false)
 time([[try_loadstring definition]], true)
 local function try_loadstring(s, component, name)
-  local success, result = pcall(loadstring(s))
+  local success, result = pcall(loadstring(s), name, _G.packer_plugins[name])
   if not success then
     vim.schedule(function()
       vim.api.nvim_notify('packer.nvim: Error running ' .. component .. ' for ' .. name .. ': ' .. result, vim.log.levels.ERROR, {})
@@ -69,6 +69,11 @@ end
 time([[try_loadstring definition]], false)
 time([[Defining packer_plugins]], true)
 _G.packer_plugins = {
+  LuaSnip = {
+    loaded = true,
+    path = "/home/phage/.local/share/nvim/site/pack/packer/start/LuaSnip",
+    url = "https://github.com/L3MON4D3/LuaSnip"
+  },
   ["barbar.nvim"] = {
     loaded = true,
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/barbar.nvim",
@@ -109,11 +114,6 @@ _G.packer_plugins = {
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/cmp-nvim-lua",
     url = "https://github.com/hrsh7th/cmp-nvim-lua"
   },
-  ["cmp-nvim-ultisnips"] = {
-    loaded = true,
-    path = "/home/phage/.local/share/nvim/site/pack/packer/start/cmp-nvim-ultisnips",
-    url = "https://github.com/quangnguyen30192/cmp-nvim-ultisnips"
-  },
   ["cmp-path"] = {
     loaded = true,
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/cmp-path",
@@ -128,6 +128,21 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/cmp-tabnine",
     url = "https://github.com/tzachar/cmp-tabnine"
+  },
+  cmp_luasnip = {
+    loaded = true,
+    path = "/home/phage/.local/share/nvim/site/pack/packer/start/cmp_luasnip",
+    url = "https://github.com/saadparwaiz1/cmp_luasnip"
+  },
+  ["colorbuddy.nvim"] = {
+    loaded = true,
+    path = "/home/phage/.local/share/nvim/site/pack/packer/start/colorbuddy.nvim",
+    url = "https://github.com/tjdevries/colorbuddy.nvim"
+  },
+  ["go.nvim"] = {
+    loaded = true,
+    path = "/home/phage/.local/share/nvim/site/pack/packer/start/go.nvim",
+    url = "https://github.com/ray-x/go.nvim"
   },
   ["lspkind-nvim"] = {
     loaded = true,
@@ -144,6 +159,11 @@ _G.packer_plugins = {
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/luatab.nvim",
     url = "https://github.com/alvarosevilla95/luatab.nvim"
   },
+  ["modus-theme-vim"] = {
+    loaded = true,
+    path = "/home/phage/.local/share/nvim/site/pack/packer/start/modus-theme-vim",
+    url = "https://github.com/ishan9299/modus-theme-vim"
+  },
   ["nvim-autopairs"] = {
     loaded = true,
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/nvim-autopairs",
@@ -159,13 +179,23 @@ _G.packer_plugins = {
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/nvim-colorizer.lua",
     url = "https://github.com/norcalli/nvim-colorizer.lua"
   },
+  ["nvim-lsp-installer"] = {
+    loaded = true,
+    path = "/home/phage/.local/share/nvim/site/pack/packer/start/nvim-lsp-installer",
+    url = "https://github.com/williamboman/nvim-lsp-installer"
+  },
   ["nvim-lspconfig"] = {
     loaded = true,
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/nvim-lspconfig",
     url = "https://github.com/neovim/nvim-lspconfig"
   },
+  ["nvim-neoclip.lua"] = {
+    config = { "\27LJ\2\0025\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fneoclip\frequire\0" },
+    loaded = true,
+    path = "/home/phage/.local/share/nvim/site/pack/packer/start/nvim-neoclip.lua",
+    url = "https://github.com/AckslD/nvim-neoclip.lua"
+  },
   ["nvim-tree.lua"] = {
-    config = { "\27LJ\2\2;\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\14nvim-tree\frequire\0" },
     loaded = true,
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/nvim-tree.lua",
     url = "https://github.com/kyazdani42/nvim-tree.lua"
@@ -195,10 +225,20 @@ _G.packer_plugins = {
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/popup.nvim",
     url = "https://github.com/nvim-lua/popup.nvim"
   },
+  ["sqlite.lua"] = {
+    loaded = true,
+    path = "/home/phage/.local/share/nvim/site/pack/packer/start/sqlite.lua",
+    url = "https://github.com/tami5/sqlite.lua"
+  },
   ["telescope.nvim"] = {
     loaded = true,
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/telescope.nvim",
     url = "https://github.com/nvim-lua/telescope.nvim"
+  },
+  ["tokyonight.nvim"] = {
+    loaded = true,
+    path = "/home/phage/.local/share/nvim/site/pack/packer/start/tokyonight.nvim",
+    url = "https://github.com/folke/tokyonight.nvim"
   },
   ["vim-commentary"] = {
     loaded = true,
@@ -208,10 +248,10 @@ _G.packer_plugins = {
 }
 
 time([[Defining packer_plugins]], false)
--- Config for: nvim-tree.lua
-time([[Config for nvim-tree.lua]], true)
-try_loadstring("\27LJ\2\2;\0\0\2\0\3\0\a6\0\0\0'\1\1\0B\0\2\0029\0\2\0004\1\0\0B\0\2\1K\0\1\0\nsetup\14nvim-tree\frequire\0", "config", "nvim-tree.lua")
-time([[Config for nvim-tree.lua]], false)
+-- Config for: nvim-neoclip.lua
+time([[Config for nvim-neoclip.lua]], true)
+try_loadstring("\27LJ\2\0025\0\0\2\0\3\0\0066\0\0\0'\1\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\fneoclip\frequire\0", "config", "nvim-neoclip.lua")
+time([[Config for nvim-neoclip.lua]], false)
 if should_profile then save_profiles() end
 
 end)

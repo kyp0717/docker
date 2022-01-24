@@ -3,7 +3,9 @@
 require('settings')
 require('keymappings')
 require('plugins')
-require'nvim-tree'.setup {}
+-- require'nvim-tree'.setup {}
+require('config-nvimtree')
+require('config-bufferline')
 require('nvim-autopairs').setup{}
 -- require('config-cmp')
 require('tjdevries-completion')
@@ -79,11 +81,6 @@ local Plug = vim.fn['plug#']
 
 vim.call('plug#begin', '~/.config/nvim/plugged')
 -- Plug 'tpope/vim-sensible'
-Plug 'dylon/vim-antlr'
 Plug 'scr1pt0r/crease.vim'
 vim.call('plug#end')
 
-vim.cmd([[
-au BufRead,BufNewFile *.g set filetype=antlr3
-au BufRead,BufNewFile *.g4 set filetype=antlr4
-]])

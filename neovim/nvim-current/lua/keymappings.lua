@@ -1,6 +1,13 @@
 -- Map leader to space
 vim.g.mapleader = ' '
 
+local opts = { noremap = true, silent = true }
+
+local term_opts = { silent = true }
+
+-- Shorten function name
+local keymap = vim.api.nvim_set_keymap
+
 -- Map other keys
 local function map(mode, lhs, rhs, opts)
   local options = {noremap = true}
@@ -21,7 +28,15 @@ map('n', '<leader>o', 'm`o<Esc>``')  -- Insert a newline in normal mode
 
 map('n', '<Space>', '<NOP>')
 map('n', '<Leader>h', ':set hlsearch!<CR>')
--- map('n', '<Leader>e', ':NvimTreeToggle<CR>')
+map('n', '<Leader>e', ':NvimTreeToggle<CR>')
+
+-- Naviagate buffers
+keymap("n", "<S-l>", ":bnext<CR>", opts)
+keymap("n", "<S-h>", ":bprevious<CR>", opts)
+-- map('n', '\\\\', ':BufferNext<CR>', opts)
+-- Close buffer
+map('n', '\\c', ':BufferClose<CR>')
+
 
 map('n', '<Leader>ff', "<cmd>lua require('telescope.builtin').find_files()<CR>")
 map('n', '<Leader>fg', "<cmd>lua require('telescope.builtin').live_grep()<CR>")
@@ -34,11 +49,6 @@ map('n', '<C-j>', '<C-w>j')
 map('n', '<C-k>', '<C-w>k')
 map('n', '<C-l>', '<C-w>l')
 
--- buffer movement
-map('n', '<Leader>bp', ':BufferPrevious<CR>', opts)
-map('n', '\\\\', ':BufferNext<CR>', opts)
--- Close buffer
-map('n', '\\c', ':BufferClose<CR>')
 
 -- hilight indenting
 map('n', '<', '<gv')
