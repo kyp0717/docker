@@ -14,6 +14,9 @@ local function map(mode, lhs, rhs, opts)
   if opts then options = vim.tbl_extend('force', options, opts) end
   vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
+-- keymap("i", "<C-\\>", "<ESC>", opts)
+-- keymap("i", "<fj>", "<ESC>", opts)
+-- keymap("i", "<jk>", "<ESC>", opts)
 
 map('', '<leader>c', '"+y')       -- Copy to clipboard in normal, visual, select and operator modes
 map('i', '<C-u>', '<C-g>u<C-u>')  -- Make <C-u> undo-friendly

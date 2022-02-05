@@ -1,6 +1,4 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
-
-
 return require('packer').startup(function()
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
@@ -23,9 +21,7 @@ return require('packer').startup(function()
       'williamboman/nvim-lsp-installer',
   }
 
-  use {'folke/tokyonight.nvim'}
   use {'ishan9299/modus-theme-vim'}
-  use {'tpope/vim-commentary'}
   -- telescope
   use {'nvim-lua/popup.nvim'}
   use {'nvim-lua/plenary.nvim'}
@@ -78,6 +74,25 @@ return require('packer').startup(function()
 
   use 'ray-x/go.nvim'
   use 'L3MON4D3/LuaSnip'
+  use 'ggandor/lightspeed.nvim'
+  use {
+    'numToStr/Comment.nvim',
+    config = function()
+        require('Comment').setup()
+    end
+  }
+
+  -- use {
+  --   "folke/trouble.nvim",
+  --   requires = "kyazdani42/nvim-web-devicons",
+  --   config = function()
+  --     require("trouble").setup {
+  --       -- your configuration comes here
+  --       -- or leave it empty to use the default settings
+  --       -- refer to the configuration section below
+  --     }
+  --   end
+  -- }
 
   -- You can alias plugin names
   -- use {'dracula/vim', as = 'dracula'}

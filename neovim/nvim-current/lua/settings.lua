@@ -28,4 +28,6 @@ opt.wrap = false                    -- Disable line wrap
 -- opt.paste = true
 opt.hlsearch = true
 opt.cursorline = true
+
+opt.foldenable=false
 vim.cmd 'set colorcolumn=80'

@@ -4,12 +4,38 @@ configs.setup {
   ensure_installed="maintained",
   highlight = {
     enable=true,
+    -- list of language that will be disabled
+    -- disable = { "c", "rust" },
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
   },
   indent = {
     enable=true
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "<C-n>",
+      node_incremental = "<C-n>",
+      scope_incremental = "<C-s>",
+      node_decremental = "<C-r>",
+    },
+  },
+    textsubjects = {
+    enable = true,
+    prev_selection = ',', -- (Optional) keymap to select the previous selection
+    keymaps = {
+        ['.'] = 'textsubjects-smart',
+        [';'] = 'textsubjects-container-outer',
+        ['i;'] = 'textsubjects-container-inner',
+    }
   }
-
 }
+
 
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
@@ -27,16 +53,14 @@ vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 -- set foldtext=MyFoldText()
 -- ]])
 
-vim.cmd([[
-set fillchars=fold:━
-let g:crease_foldtext = { 'default': '%f%f┫ %t%{CreaseChanged()} ┣%=┫ %l lines ┣%f%f' }
+-- vim.cmd([[
+-- set fillchars=fold:━
+-- set fillchars=fold:━
+-- let g:crease_foldtext = { 'default': '%f%f┫ %t%{CreaseChanged()} ┣%=┫ %l lines ┣%f%f' }
+-- function! CreaseChanged()
+--     return gitgutter#fold#is_changed() ? ' *' : ''
+-- endfunction
+-- ]])
 
-function! CreaseChanged()
-    return gitgutter#fold#is_changed() ? ' *' : ''
-endfunction
-]])
 
-local function test()
-print "hello"
-end
 
