@@ -1,16 +1,15 @@
-
 -- importing supporting config files
 require('settings')
 require('keymappings')
 require('plugins')
 -- require'nvim-tree'.setup {}
 require('config-nvimtree')
-require('config-bufferline')
+-- require('config-bufferline')
 require('nvim-autopairs').setup{}
 -- require('config-cmp')
 require('tjdevries-completion')
-require('config-golang')
 require('config-lsp')
+require('config-golang')
 require('config-treesitter')
 require('config-lightspeed')
 require('Comment').setup()
@@ -69,9 +68,4 @@ local g = vim.g
 local opt = vim.opt
 
 
-local Plug = vim.fn['plug#']
-vim.call('plug#begin', '~/.config/nvim/plugged')
--- Plug 'tpope/vim-sensible'
--- Plug 'scr1pt0r/crease.vim'
-vim.call('plug#end')
 

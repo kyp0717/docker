@@ -31,15 +31,15 @@ return require('packer').startup(function()
   use {'nvim-treesitter/nvim-treesitter'}
   use {'windwp/nvim-autopairs'}
   use {'onsails/lspkind-nvim'}
-  use {"tjdevries/colorbuddy.nvim"}
+  -- use {"tjdevries/colorbuddy.nvim"}
 
   use {
     'nvim-lualine/lualine.nvim',
     requires = {'kyazdani42/nvim-web-devicons', opt = true}
   }
 
-  use {'akinsho/bufferline.nvim', 
-        requires = 'kyazdani42/nvim-web-devicons'}
+  -- use {'akinsho/bufferline.nvim', 
+  --       requires = 'kyazdani42/nvim-web-devicons'}
 
 
   use {
@@ -57,11 +57,11 @@ return require('packer').startup(function()
           'saadparwaiz1/cmp_luasnip'
       }
   }
-  use {
-      'tzachar/cmp-tabnine',
-      run = './install.sh',
-      requires = 'hrsh7th/nvim-cmp'
-  }
+  -- use {
+  --     'tzachar/cmp-tabnine',
+  --     run = './install.sh',
+  --     requires = 'hrsh7th/nvim-cmp'
+  -- }
 
 
   use {

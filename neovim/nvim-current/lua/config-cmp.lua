@@ -23,7 +23,7 @@ cmp.setup {
           path = "[path]",
           luasnip = "[snip]",
           gh_issues = "[issues]",
-          tn = "[TabNine]",
+          -- tn = "[TabNine]",
         },
       },
     },
@@ -104,8 +104,8 @@ autocmd FileType go lua require('cmp').setup.buffer({ sources = {{ name = 'nvim_
 -- })
 
 -- TabNine
-local tabnine = require('cmp_tabnine.config')
-tabnine:setup({max_lines = 1000, max_num_results = 20, sort = true})
+-- local tabnine = require('cmp_tabnine.config')
+-- tabnine:setup({max_lines = 1000, max_num_results = 20, sort = true})
 
 -- Database completion
 -- vim.api.nvim_exec([[

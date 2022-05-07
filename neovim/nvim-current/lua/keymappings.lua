@@ -31,7 +31,7 @@ map('n', '<leader>o', 'm`o<Esc>``')  -- Insert a newline in normal mode
 
 map('n', '<Space>', '<NOP>')
 map('n', '<Leader>h', ':set hlsearch!<CR>')
-map('n', '<Leader>e', ':NvimTreeToggle<CR>')
+map('n', '<Leader>tt', ':NvimTreeToggle<CR>')
 
 -- Naviagate buffers
 keymap("n", "<S-l>", ":bnext<CR>", opts)

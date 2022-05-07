@@ -24,8 +24,6 @@ require('go').setup({
                        -- if lsp_on_attach is a function: use this function as on_attach function for gopls
   lsp_codelens = true, -- set to false to disable codelens, true by default
   gopls_remote_auto = true, -- add -remote=auto to gopls
-  gopls_cmd = nil, -- if you need to specify gopls path and cmd, e.g {"/home/user/lsp/gopls", "-logfile","/var/log/gopls.log" }
-  fillstruct = 'gopls', -- can be nil (use fillstruct, slower) and gopls
   lsp_diag_hdlr = true, -- hook lsp diag handler
   dap_debug = true, -- set to false to disable dap
   textobjects = true, -- enable default text jobects through treesittter-text-objects
@@ -37,6 +35,40 @@ require('go').setup({
   dap_debug_vt = true, -- set to true to enable dap virtual text
   build_tags = "tag1,tag2" -- set default build tags
 })
+
+
+
+function goimports(timeoutms)
+  local context = { source = { organizeImports = true } }
+  vim.validate { context = { context, "t", true } }
+
+  local params = vim.lsp.util.make_range_params()
+  params.context = context
+
+  -- See the implementation of the textDocument/codeAction callback
+  -- (lua/vim/lsp/handler.lua) for how to do this properly.
+  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeout_ms)
+  if not result or next(result) == nil then return end
+  local actions = result[1].result
+  if not actions then return end
+  local action = actions[1]
+
+  -- textDocument/codeAction can return either Command[] or CodeAction[]. If it
+  -- is a CodeAction, it can have either an edit, a command or both. Edits
+  -- should be executed first.
+  if action.edit or type(action.command) == "table" then
+    if action.edit then
+      vim.lsp.util.apply_workspace_edit(action.edit)
+    end
+    if type(action.command) == "table" then
+      vim.lsp.buf.execute_command(action.command)
+    end
+  else
+    vim.lsp.buf.execute_command(action)
+  end
+end
+
+vim.lsp.set_log_level("debug")
 
 
 local lsp_installer_servers = require'nvim-lsp-installer.servers'
