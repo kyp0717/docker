@@ -38,7 +38,7 @@ keymap("n", "<S-l>", ":bnext<CR>", opts)
 keymap("n", "<S-h>", ":bprevious<CR>", opts)
 -- map('n', '\\\\', ':BufferNext<CR>', opts)
 -- Close buffer
-map('n', '\\c', ':BufferClose<CR>')
+map('n', '<S-d>', ':BufferClose<CR>')
 
 
 map('n', '<Leader>ff', "<cmd>lua require('telescope.builtin').find_files()<CR>")
@@ -57,7 +57,7 @@ map('n', '<C-l>', '<C-w>l')
 map('n', '<', '<gv')
 map('n', '>', '>gv')
 
--- move selected line/block of text in visual mode
+-- move select
 map('x', 'J', ':move \'>+1<CR>gv-gv\'')
 map('x', 'K', ':move \'<-2<CR>gv-gv\'')
 

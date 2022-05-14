@@ -85,11 +85,6 @@ _G.packer_plugins = {
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/barbar.nvim",
     url = "https://github.com/romgrk/barbar.nvim"
   },
-  ["bufferline.nvim"] = {
-    loaded = true,
-    path = "/home/phage/.local/share/nvim/site/pack/packer/start/bufferline.nvim",
-    url = "https://github.com/akinsho/bufferline.nvim"
-  },
   ["cmp-buffer"] = {
     loaded = true,
     path = "/home/phage/.local/share/nvim/site/pack/packer/start/cmp-buffer",

@@ -1,5 +1,7 @@
-local path = require 'nvim-lsp-installer.path'
-local install_root_dir = path.concat {vim.fn.stdpath 'data', 'lsp_servers'}
+-- local path = require 'nvim-lsp-installer.path'
+-- local install_root_dir = path.concat {vim.fn.stdpath 'data', 'lsp_servers'}
+local install_root_dir = vim.fn.stdpath("data") .. "/lsp_servers"
+
 
 
 require('go').setup({
